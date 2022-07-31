@@ -24,6 +24,7 @@ import axios from "axios";
 
 export default {
     name: 'ComMent',
+ 
     data() {
         return {
             title: '',
@@ -79,7 +80,7 @@ a {
 
 .form {
     width: 500px;
-    height: 500px;
+    height: 450px;
     background-color: #FFF;
     display: flex;
     flex-direction: column;
@@ -106,7 +107,7 @@ textarea {
 
 .sent {
     font-size: 20px;
-    margin-top: 40px;
+    margin-top: 10px;
     background-color: #FFF;
 }
 

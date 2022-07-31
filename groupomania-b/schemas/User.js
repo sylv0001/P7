@@ -5,7 +5,8 @@ const uniqueValidator = require('mongoose-unique-validator');
 //Create forms of datas (sauce) in database
 const userSchema = mongoose.Schema({
   email: { type: String, required: true, unique: true },
-  password: { type: String, required: true }
+  password: { type: String, required: true },
+  admin: { type: Boolean, default: false }
 });
 userSchema.plugin(uniqueValidator);
 //Export model of user
