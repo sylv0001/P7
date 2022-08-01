@@ -24,7 +24,7 @@ import axios from "axios";
 
 export default {
     name: 'ComMent',
- 
+
     data() {
         return {
             title: '',
@@ -52,7 +52,10 @@ export default {
                 title: this.title,
                 commentaire: this.commentaire,
                 imageUrl: this.imageUrl
-            })
+            }, {
+                headers: {
+                    'Authorization': `Basic ${sessionStorage.token}`
+                }})
         }
     }
 }

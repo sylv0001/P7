@@ -6,12 +6,13 @@ const Com = require('../schemas/Com');
 //Create Comment
 exports.createCom = (req, res, next) => {
   //Get all input in body 
-  const comObject = JSON.parse(req.body.com);
+  const comObject = req.body;
 
   const com = new Com({
     ...comObject,
     imageUrl: `${req.protocol}://${req.get('host')}/img/${req.file.filename}`,
   });
+
 
   //Record Comments in DB
   com.save()
