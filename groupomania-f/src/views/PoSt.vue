@@ -1,7 +1,7 @@
 <template>
   <NavBar></NavBar>
   <LoGo></LoGo>
-  <HoMe></HoMe>
+  <PoSt></PoSt>
   <FooTer></FooTer>
   <router-view></router-view>
 </template>
@@ -10,14 +10,14 @@
 // @ is an alias to /src
 import NavBar from '@/components/NavBar.vue'
 import LoGo from '@/components/LoGo'
-import HoMe from '@/components/HoMe'
+import PoSt from '@/components/PoSt'
 import FooTer from '@/components/FooTer.vue'
 
 export default {
   components: {
     NavBar,
     LoGo,
-    HoMe,
+    PoSt,
     FooTer
   }
 }

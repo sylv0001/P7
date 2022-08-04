@@ -3,6 +3,7 @@ import LogIn from '../views/LogIn.vue'
 import NewPass from '../views/NewPass.vue'
 import SignUp from '../views/SignUp.vue'
 import HoMe from '../views/HoMe.vue'
+import PoSt from '../views/PoSt.vue'
 
 const routes = [
   {
@@ -16,15 +17,20 @@ const routes = [
     component: SignUp
   },
   {
+    path: '/newpass',
+    name: 'newpass',
+    component: NewPass
+  },
+  {
     path: '/home',
     name: 'home',
     component: HoMe
   },
   {
-    path: '/newpass',
-    name: 'newpass',
-    component: NewPass
-  }
+    path: '/post',
+    name: 'post',
+    component: PoSt
+  },
 ]
 
 const router = createRouter({

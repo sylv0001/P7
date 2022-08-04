@@ -10,7 +10,7 @@
                         <router-link to="/home">Accueil</router-link>
                     </li>
                     <li v-show="connect">
-                        <router-link to="/home">Collègues</router-link>
+                        <router-link to="/post">Poster</router-link>
                     </li>
                     <li v-show="connect">
                         <router-link to="/home">Profil</router-link>
