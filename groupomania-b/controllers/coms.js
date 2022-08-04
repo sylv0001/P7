@@ -10,10 +10,10 @@ exports.createCom = (req, res, next) => {
 
   const com = new Com({
     ...comObject,
+    userId: req.auth.userId,
     imageUrl: `${req.protocol}://${req.get('host')}/img/${req.file.filename}`,
   });
-
-
+  
   //Record Comments in DB
   com.save()
     .then(() => res.status(201).json({ message: 'Commentaire enregistré !' }))

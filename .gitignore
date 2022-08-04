@@ -105,6 +105,9 @@ dist
 #Images folder
 img/
 
+#Security
+.env
+
 
 
 

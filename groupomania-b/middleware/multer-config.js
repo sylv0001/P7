@@ -25,6 +25,7 @@ const storage = multer.diskStorage({
   destination: (req, file, callback) => {
     callback(null, 'img');
   },
+
   //Rename image file
   filename: (req, file, callback) => {
     const name = file.originalname.split(' ').join('_');
@@ -32,5 +33,6 @@ const storage = multer.diskStorage({
     callback(null, name + Date.now() + '.' + extension);
   }
 });
+
 //Export unique image with multer
-module.exports = multer({storage: storage}).single('image');
+module.exports = multer({ storage: storage }).single('image');

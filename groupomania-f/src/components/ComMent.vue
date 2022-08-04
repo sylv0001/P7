@@ -10,7 +10,7 @@
                 <textarea v-model="commentaire" name="commentaire" placeholder="Votre commentaire"></textarea>
                 <br />
                 <label for="imageUrl">Votre image : </label>
-                <input ref="file" v-on:change="handleFileUpload()" type="file" name="imageUrl">
+                <input @change="handleFileUpload( $event )" type="file" name="imageUrl">
                 <br />
                 <button @click="comment()" type="button" class="sent">Envoyer</button>
             </form>
@@ -20,7 +20,6 @@
 
 <script>
 import axios from "axios";
-//import ref from "vue";
 
 export default {
     name: 'ComMent',
@@ -34,30 +33,29 @@ export default {
     },
 
     methods: {
-        handleFileUpload() {
-            {
-                let input = this.$refs.file
-                let img = input.files
-                if (img && img[0]) {
-                    let reader = new FileReader
-                    reader.onload = e => {
-                        this.previewImage = e.target.result
-                    }
-                }
-            }
+        handleFileUpload(event) {
+            this.file = event.target.files[0];
         },
+
         comment() {
+            const formData = new FormData()
+
+            formData.append('title', this.title)
+            formData.append('commentaire', this.commentaire)
+            formData.append('image', this.file)
+
+            console.log(FormData)
+
             //Connection a l'API et envoi des datas (input)
-            axios.post('http://localhost:3000/api/coms', {
-                title: this.title,
-                commentaire: this.commentaire,
-                imageUrl: this.imageUrl
-            }, {
+            axios.post('http://localhost:3000/api/coms', formData, {
                 headers: {
-                    'Authorization': `Basic ${sessionStorage.token}`
-                }})
+                    'Authorization': `Bearer ${sessionStorage.token}`,
+                }
+            })
         }
+
     }
+
 }
 
 
