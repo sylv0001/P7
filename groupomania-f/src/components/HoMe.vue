@@ -28,6 +28,7 @@
 <script>
 //import axios from "axios";
 import axios from "axios";
+
 const user = sessionStorage.getItem('user')
 
 export default {
@@ -42,7 +43,9 @@ export default {
 
   method() {
         axios.get('http://localhost:3000/api/coms')
-      .then(response => (this.all_users = response.data))
+      .then(response => (
+        console.log(response.data)))
+      
       .catch(error => console.log(error))
   }
 }

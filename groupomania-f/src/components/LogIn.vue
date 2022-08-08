@@ -27,7 +27,7 @@ export default {
   name: 'LogIn',
   data() {
     return {
-      name: "",
+      name: '',
       email: '',
       password: '',
     }
@@ -41,7 +41,6 @@ export default {
         .then(response => {
           sessionStorage.setItem("token", response.data.token);
           sessionStorage.setItem('userId', response.data.userId);
-          sessionStorage.setItem('user', response.data.name);
           location = "http://localhost:3001/home"
         })
         .catch(error => {

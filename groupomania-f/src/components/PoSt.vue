@@ -10,7 +10,7 @@
                 <textarea v-model="commentaire" name="commentaire" placeholder="Votre commentaire"></textarea>
                 <br />
                 <label for="imageUrl">Votre image : </label>
-                <input @change="handleFileUpload( $event )" type="file" name="imageUrl" accept=".jpg, .jpeg, .png, .gif">
+                <input @change="handleFileUpload($event)" type="file" name="imageUrl" accept=".jpg, .jpeg, .png, .gif">
                 <br />
                 <button @click="comment()" type="button" class="sent">Envoyer</button>
             </form>
@@ -52,12 +52,13 @@ export default {
                     'Authorization': `Bearer ${sessionStorage.token}`,
                 }
             })
+                .then(response => {
+                    console.log(response);
+                    location = "http://localhost:3001/home"
+                })
         }
-
     }
-
 }
-
 
 </script>
 
