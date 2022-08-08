@@ -13,6 +13,7 @@ exports.signup = (req, res, next) => {
     .then(hash => {
       //Create user
       const user = new User({
+        name: req.body.name,
         email: req.body.email,
         password: hash
       });
@@ -32,14 +33,14 @@ exports.login = (req, res, next) => {
   User.findOne({ email: req.body.email })
     .then(user => {
       if (!user) {
-        return res.status(401).json({ error: 'Utilisateur non trouvé !' });
+        return res.sendStatus(404);
       }
 
       //Compare token to be sure if it is the good user login
       bcrypt.compare(req.body.password, user.password)
         .then(valid => {
           if (!valid) {
-            return res.status(401).json({ error: 'Mot de passe incorrect !' });
+            return res.sendStatus(401);
           }
           res.status(200).json({
             userId: user._id,
@@ -70,7 +71,7 @@ exports.updatepass = (req, res, next) => {
         .then(hash => {
           //Password updated 
           user.updateOne({ password: hash })
-            .then(() => res.status(201).json({ message: 'Mot de passe mofdifié !' }))
+            .then(() => res.status(201).json({ message: 'Mot de passe modifié !' }))
             .catch(error => res.status(400).json({ error }))
         })
         .catch(error => {

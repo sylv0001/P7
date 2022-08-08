@@ -10,7 +10,7 @@
                 <textarea v-model="commentaire" name="commentaire" placeholder="Votre commentaire"></textarea>
                 <br />
                 <label for="imageUrl">Votre image : </label>
-                <input @change="handleFileUpload( $event )" type="file" name="imageUrl">
+                <input @change="handleFileUpload( $event )" type="file" name="imageUrl" accept=".jpg, .jpeg, .png, .gif">
                 <br />
                 <button @click="comment()" type="button" class="sent">Envoyer</button>
             </form>

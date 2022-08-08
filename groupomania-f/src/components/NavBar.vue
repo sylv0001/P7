@@ -13,15 +13,16 @@
                         <router-link to="/post">Poster</router-link>
                     </li>
                     <li v-show="connect">
-                        <router-link to="/home">Profil</router-link>
+                        <span class="connect" @mouseenter="showsubmenu = true" :style="connect ? { 'background-color': '#DCFFC8' } : { 'background-color': '' }"></span>
                     </li>
-                    <li v-show="connect">
-                        <router-link to="/login" v-on:click="disconnect">Déconnexion</router-link>
-                    </li>
-                    <li>
-                        <span class="connect"
-                            :style="connect ? { 'background-color': '#DCFFC8' } : { 'background-color': '' }"></span>
-                    </li>
+                    <ul class="submenu" v-show="showsubmenu" @mouseleave="showsubmenu = false">
+                        <li>
+                            <router-link to="/profil">Profil</router-link>
+                        </li>
+                        <li>
+                            <router-link to="/login" v-on:click="disconnect">Déconnexion</router-link>
+                        </li>
+                    </ul>
                 </ul>
             </nav>
         </div>
@@ -35,7 +36,8 @@ export default {
     data() {
         if (sessionStorage.userId) {
             return {
-                connect: true
+                connect: true,
+                showsubmenu: false
             }
         }
         else {
@@ -55,6 +57,14 @@ export default {
 </script>
 
 <style scoped>
+.submenu {position:fixed;
+    display: flex;
+    flex-direction: column;
+}
+.submenu > li {
+    height: 35px;
+}
+
 header {
     padding: 0;
     background: #ffd7d7;
@@ -62,9 +72,11 @@ header {
 }
 
 .header {
+    height: 70px;
     padding: 0 20px;
     max-width: 960px;
     margin: 0 auto;
+    display: block;
 }
 
 .logo-box {

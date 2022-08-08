@@ -3,14 +3,15 @@
         <div className='form'>
             <h1>Créer un compte</h1>
             <form>
+                <label for="name">Nom : </label>
+                <input v-model="name" type="text" name="name" placeholder="Dupont" />
+
                 <label for="email">Email : </label>
                 <input v-model="email" type="email" name="email" placeholder="name@fai.country" />
-                <br />
-                <br />
+
                 <label for="password">Mot de passe : </label>
                 <input v-model="password" type="password" name="password" placeholder="********" />
-                <br />
-                <br />
+
                 <button @click="signup()" type="button" class="sent">Créer</button>
             </form>
         </div>
@@ -25,6 +26,7 @@ export default {
     name: 'SignUp',
     data() {
         return {
+            name: '',
             email: '',
             password: ''
         }
@@ -34,30 +36,35 @@ export default {
         signup() {
             //Connection a l'API et envoi des datas (input)
             axios.post('http://localhost:3000/api/auth/signup', {
+                name: this.name,
                 email: this.email,
                 password: this.password
             })
+                .then(() => {
+                    const ok = true
+                    const user = { email: this.email, password: this.password };
 
-            const user = { email: this.email, password: this.password };
+                    if (ok) {
+                        //Connexion de l'utilisateur
+                        axios.post("http://localhost:3000/api/auth/login", user)
 
-            //Affichage de l'information de connection
-            alert(user.email + ' est créer. Vous êtes maintenant connexté.');
-
-            //Connexion de l'utilisateur
-            axios.post("http://localhost:3000/api/auth/login", user)
-
-                .then(response => {
-                    sessionStorage.setItem("token", response.data.token);
-                    sessionStorage.setItem('userId', response.data.userId);
-                    location = "http://localhost:3001/home"
-                })
+                            .then(response => {
+                                sessionStorage.setItem("token", response.data.token);
+                                sessionStorage.setItem('userId', response.data.userId);
+                                sessionStorage.setItem('user', this.name);
+                                location = "http://localhost:3001/home"
+                            })
 
 
-                .catch(error => {
-                    if (error.response.status == 401) {
-                        this.msg = 'Utilisateur déjà existant !'
+                            .catch(error => {
+                                if (error.response.status == 401) {
+                                    this.msg = 'Utilisateur déjà existant !'
+                                }
+                            })
                     }
                 })
+
+
         }
     }
 }
@@ -67,7 +74,7 @@ export default {
 <style scoped>
 .container {
     width: 100%;
-    height: 360px;
+    height: 400px;
     padding-top: 3%;
     display: flex;
     flex-direction: column;
@@ -107,7 +114,7 @@ input {
 
 .sent {
     font-size: 20px;
-    margin-top: 40px;
+    margin-top: 20px;
     background-color: #FFF;
 }
 

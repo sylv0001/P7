@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 const uniqueValidator = require('mongoose-unique-validator');
 //Create forms of datas (sauce) in database
 const userSchema = mongoose.Schema({
+  name: { type: String, default: "" },
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
   admin: { type: Boolean, default: false }
