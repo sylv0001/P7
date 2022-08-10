@@ -2,73 +2,90 @@
   <div id="app" class="container">
 
     <h1>Commentaires</h1>
-    <table>
-      <thead>
-        <!-- En-tête du tableau -->
-        <tr>
-          <th>Nom</th>
-          <th>Titre</th>
-          <th>Image</th>
-          <th>Commentaire</th>
-        </tr>
-      </thead>
-      <tbody>
-        <!-- Corps du tableau (3 colonnes (td) et 1 ligne (tr))-->
-        <tr>
-          <td>{{ user }}</td>
-          <td>Mon titre</td>
-          <td>Img</td>
-          <td>1er Com</td>
-        </tr>
-      </tbody>
-    </table>
+    <div class="commentaires">
+
+      <div class="pseudo">
+      </div>
+      <div class="title">
+      </div>
+      <div class="image">
+      </div>
+      <div class="commentaire">
+      </div>
+
+    </div>
   </div>
+
 </template>
 
 <script>
 //import axios from "axios";
 import axios from "axios";
 
-const user = sessionStorage.getItem('user')
-
 export default {
- 
- name: 'app',
 
-  data() {
-    return {
-      user
-   }
-  },
+  name: 'app',
 
-  method() {
-        axios.get('http://localhost:3000/api/coms')
+  created() {
+    axios.get('http://localhost:3000/api/coms', {
+      headers: {
+        'Authorization': `Bearer ${sessionStorage.token}`,
+      }
+    })
       .then(response => (
-        console.log(response.data)))
-      
+        response.data.forEach(item => {
+          console.log(item.userId.name)
+          console.log(item.title)
+          console.log(item.commentaire)
+        })
+
+      ))
+
       .catch(error => console.log(error))
+
   }
 }
 </script>
 
 <style scoped>
+.container {
+  width: 100%;
+}
+
 h1 {
   text-align: center;
 }
 
-table {
-  width: 75%;
+.commentaires {
+  width: 90%;
   margin-left: auto;
   margin-right: auto;
-  text-align: center;
-  margin-top: 30px;
-  border-collapse: collapse;
-  /* Les bordures du tableau seront collées (plus joli) */
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
 }
 
-td,
-th {
-  border: 1px solid black;
-  height: auto;
+.pseudo,
+.title,
+.image,
+.commentaire {
+  border: 1px solid #4E5166;
+  text-align: center;
+}
+
+.pseudo {
+  width: 10%;
+}
+
+.title {
+  width: 20%;
+}
+
+.image {
+  width: 20%;
+}
+
+.commentaire {
+  width: 50%;
 }
 </style>

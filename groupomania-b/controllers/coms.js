@@ -24,7 +24,7 @@ exports.createCom = (req, res, next) => {
 exports.getAllCom = (req, res, next) => {
   
   //Find all Comments to screen
-  Com.find().then(
+  Com.find().find().populate('userId', 'name').then(
     (coms) => {
       res.status(200).json(coms);
     }

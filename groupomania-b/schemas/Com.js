@@ -3,7 +3,11 @@ const mongoose = require('mongoose');
 
 //Create forms of datas (comments) in database
 const comSchema = mongoose.Schema({
-  userId: { type: String, required: true },
+  userId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User'
+  },
+  //userId: { type: String, required: true },
   title: { type: String, required: true },
   commentaire: { type: String, required: true },
   imageUrl: { type: String, required: true },

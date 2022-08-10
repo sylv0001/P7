@@ -41,6 +41,7 @@ export default {
         .then(response => {
           sessionStorage.setItem("token", response.data.token);
           sessionStorage.setItem('userId', response.data.userId);
+          sessionStorage.setItem('name', response.data.name);
           location = "http://localhost:3001/home"
         })
         .catch(error => {
