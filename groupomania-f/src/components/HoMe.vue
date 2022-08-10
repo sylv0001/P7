@@ -4,13 +4,13 @@
     <h1>Commentaires</h1>
     <div class="commentaires">
 
-      <div class="pseudo">
+      <div class="pseudo" v-text="pseudo">
       </div>
-      <div class="title">
+      <div class="title" v-text="title">
       </div>
-      <div class="image">
+      <div class="image"><img :src="image" alt="image du commentaire">
       </div>
-      <div class="commentaire">
+      <div class="commentaire" v-text="commentaire">
       </div>
 
     </div>
@@ -22,9 +22,19 @@
 //import axios from "axios";
 import axios from "axios";
 
-export default {
 
+export default {
   name: 'app',
+
+  data() {
+
+    return {
+      pseudo: "",
+      title: "",
+      image: "",
+      commentaire: ""
+    }
+  },
 
   created() {
     axios.get('http://localhost:3000/api/coms', {
@@ -34,9 +44,12 @@ export default {
     })
       .then(response => (
         response.data.forEach(item => {
-          console.log(item.userId.name)
-          console.log(item.title)
-          console.log(item.commentaire)
+
+          this.pseudo = item.userId.name;
+          this.title = item.title;
+          this.image = item.imageUrl;
+          this.commentaire = item.commentaire;
+          console.log(this.image)
         })
 
       ))
@@ -78,11 +91,17 @@ h1 {
 }
 
 .title {
-  width: 20%;
+  width: 10%;
 }
 
 .image {
-  width: 20%;
+  width: 30%;
+}
+
+.image > img {
+  width: 90%;
+    object-fit: contain;
+
 }
 
 .commentaire {
