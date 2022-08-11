@@ -2,15 +2,15 @@
   <div id="app" class="container">
 
     <h1>Commentaires</h1>
-    <div class="commentaires">
+    <div class="commentaires" v-for="com in coms" :key="com.title">
 
-      <div class="pseudo" v-text="pseudo">
+      <div class="pseudo" v-text="com.userId.name">
       </div>
-      <div class="title" v-text="title">
+      <div class="title" v-text="com.title">
       </div>
-      <div class="image"><img :src="image" alt="image du commentaire">
+      <div class="image"><img :src="com.imageUrl" alt="image du commentaire">
       </div>
-      <div class="commentaire" v-text="commentaire">
+      <div class="commentaire" v-text="com.commentaire">
       </div>
 
     </div>
@@ -29,10 +29,7 @@ export default {
   data() {
 
     return {
-      pseudo: "",
-      title: "",
-      image: "",
-      commentaire: ""
+      coms: []
     }
   },
 
@@ -43,19 +40,17 @@ export default {
       }
     })
       .then(response => (
-        response.data.forEach(item => {
-
-          this.pseudo = item.userId.name;
-          this.title = item.title;
-          this.image = item.imageUrl;
-          this.commentaire = item.commentaire;
-          console.log(this.image)
-        })
-
+        //response.data.forEach(item => {
+        // this.pseudo = item.userId.name;
+        // this.title = item.title;
+        // this.image = item.imageUrl;
+        // this.commentaire = item.commentaire;
+        //console.log(this.commentaire)
+        //})
+        this.coms = response.data
       ))
 
       .catch(error => console.log(error))
-
   }
 }
 </script>
@@ -98,9 +93,9 @@ h1 {
   width: 30%;
 }
 
-.image > img {
-  width: 90%;
-    object-fit: contain;
+.image>img {
+  width: 100px;
+  object-fit: contain;
 
 }
 
