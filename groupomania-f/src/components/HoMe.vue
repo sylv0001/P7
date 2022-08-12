@@ -12,7 +12,12 @@
       </div>
       <div class="commentaire" v-text="com.commentaire">
       </div>
-
+      <div class="like">
+        <i class="fa fa-thumbs-up fa-xl" aria-hidden="true"></i>
+      </div>
+      <div class="dislike">
+        <i class="fa fa-thumbs-down fa-xl" aria-hidden="true"></i>
+      </div>
     </div>
   </div>
 
@@ -29,7 +34,7 @@ export default {
   data() {
 
     return {
-      coms: []
+      coms: [],
     }
   },
 
@@ -76,30 +81,51 @@ h1 {
 .pseudo,
 .title,
 .image,
-.commentaire {
+.commentaire,
+.like,
+.dislike {
   border: 1px solid #4E5166;
   text-align: center;
 }
 
 .pseudo {
   width: 10%;
+  font-size: 20px;
+  padding-top: 10px;
 }
 
 .title {
   width: 10%;
+  font-size: 20px;
+  padding-top: 10px;
 }
 
 .image {
-  width: 30%;
+  width: 15%;
 }
 
 .image>img {
   width: 100px;
   object-fit: contain;
-
+  padding-top: 10px;
+  padding-bottom: 10px;
 }
 
 .commentaire {
   width: 50%;
+  height: 100px;
+  font-size: 20px;
+  padding: 10px;
+  overflow-y : auto;
+}
+
+.like,
+.dislike {
+  width: 7.5%;
+  padding-bottom: 10px;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
 }
 </style>
