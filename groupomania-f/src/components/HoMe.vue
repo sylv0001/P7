@@ -118,6 +118,7 @@ h1 {
   width: 10%;
   font-size: 20px;
   padding-top: 10px;
+  overflow-y: auto;
 }
 
 .image {
@@ -129,8 +130,13 @@ h1 {
   object-fit: contain;
   padding-top: 10px;
   padding-bottom: 10px;
+ }
+.image>img:hover {
+  cursor:zoom-in;
 }
-
+div>img {
+  cursor:zoom-out;
+}
 .commentaire {
   width: 50%;
   height: 100px;
