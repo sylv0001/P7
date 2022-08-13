@@ -2,21 +2,27 @@
   <div id="app" class="container">
 
     <h1>Commentaires</h1>
-    <div class="commentaires" v-for="com in coms" :key="com.title">
+    <div class="commentaires" v-for="(com, index) in coms" :key="index">
 
       <div class="pseudo" v-text="com.userId.name">
       </div>
       <div class="title" v-text="com.title">
       </div>
-      <div class="image"><img :src="com.imageUrl" alt="image du commentaire">
+      <div class="image">
+        <img :src="coms[index].imageUrl" alt="image du commentaire" @click.stop="displayModal = true">
       </div>
+
+                <div>
+                <img :src="com.imageUrl" alt="image du commentaire" id="modal" v-if="displayModal">
+                </div>
+      
       <div class="commentaire" v-text="com.commentaire">
       </div>
       <div class="like">
-        <i class="fa fa-thumbs-up fa-xl" aria-hidden="true"></i>
+        <i class="fa fa-thumbs-up fa-xl" aria-hidden="true" @click="like"></i>
       </div>
       <div class="dislike">
-        <i class="fa fa-thumbs-down fa-xl" aria-hidden="true"></i>
+        <i class="fa fa-thumbs-down fa-xl" aria-hidden="true" @click="dislike"></i>
       </div>
     </div>
   </div>
@@ -29,12 +35,13 @@ import axios from "axios";
 
 
 export default {
-  name: 'app',
+  name: 'HoMe',
 
   data() {
 
     return {
       coms: [],
+      displayModal: false
     }
   },
 
@@ -48,15 +55,28 @@ export default {
         //response.data.forEach(item => {
         // this.pseudo = item.userId.name;
         // this.title = item.title;
-        // this.image = item.imageUrl;
+        //this.image = item.imageUrl;
         // this.commentaire = item.commentaire;
-        //console.log(this.commentaire)
+        //console.log(response.data),
         //})
         this.coms = response.data
       ))
 
       .catch(error => console.log(error))
-  }
+  },
+
+  methods: {
+    onClickOutsode(e) {
+      if (e.target.localName !== "button") {
+        this.displayModal = false;
+      }
+    },
+  },
+
+  mounted() {
+    window.addEventListener("click", this.onClickOutsode);
+  },
+
 }
 </script>
 
@@ -116,7 +136,7 @@ h1 {
   height: 100px;
   font-size: 20px;
   padding: 10px;
-  overflow-y : auto;
+  overflow-y: auto;
 }
 
 .like,
