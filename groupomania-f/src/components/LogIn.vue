@@ -5,14 +5,9 @@
       <form>
         <label for="email">Email : </label>
         <input v-model="email" type="email" name="email" placeholder="name@fai.country" />
-        <br />
-        <br />
         <label for="password">Mot de passe : </label>
         <input v-model="password" type="password" name="password" placeholder="********" />
-        <br />
-        <br />
         <router-link to="/newpass">Mot de passe oublié ?</router-link>
-        <br />
         <router-link to="/signup">Créer un compte</router-link>
         <button @click="login()" type="button" class="sent">Se connecter</button>
       </form>
@@ -78,7 +73,7 @@ a {
 
 .form {
   width: 500px;
-  height: 500px;
+  height: 400px;
   background-color: #FFF;
   display: flex;
   flex-direction: column;

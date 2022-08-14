@@ -13,7 +13,6 @@
       </div>
 
       <div  v-if="displayModal">
-        <button @click="displayModal = false">x</button>
         <img :src="com.imageUrl" alt="image du commentaire" id="modal">
       </div>
 
@@ -122,9 +121,9 @@ h1 {
   width: 10%;
   height: 100px;
   font-size: 20px;
-  padding-top: 10px;
-  padding-bottom: 10px;
+  padding: 10px;
   overflow-y: auto;
+  hyphens: auto;
 }
 
 .image {
@@ -157,11 +156,12 @@ div>img {
 .like,
 .dislike {
   width: 7.5%;
+  padding-top: 20px;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  gap: 10px;
-padding-top: 10px;
+  gap: 5px;
+
 }
 </style>
