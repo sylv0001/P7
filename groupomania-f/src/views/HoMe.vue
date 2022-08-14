@@ -15,7 +15,6 @@ import FooTer from '@/components/FooTer.vue'
 export default {
   components: {
     NavBar,
-
     HoMe,
     FooTer
   }

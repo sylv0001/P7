@@ -1,28 +1,31 @@
 <template>
-  <div id="app" class="container">
+  <div class="container">
 
     <h1>Commentaires</h1>
-    <div class="commentaires" v-for="(com, index) in coms" :key="index">
+    <div class="commentaires" v-for="com in coms" :key="com._id">
 
       <div class="pseudo" v-text="com.userId.name">
       </div>
       <div class="title" v-text="com.title">
       </div>
       <div class="image">
-        <img :src="coms[index].imageUrl" alt="image du commentaire" @click.stop="displayModal = true">
+        <img :src="com.imageUrl" alt="image du commentaire" @click.stop="displayModal = true">
       </div>
 
-                <div>
-                <img :src="com.imageUrl" alt="image du commentaire" id="modal" v-if="displayModal">
-                </div>
-      
+      <div  v-if="displayModal">
+        <button @click="displayModal = false">x</button>
+        <img :src="com.imageUrl" alt="image du commentaire" id="modal">
+      </div>
+
       <div class="commentaire" v-text="com.commentaire">
       </div>
       <div class="like">
         <i class="fa fa-thumbs-up fa-xl" aria-hidden="true" @click="like"></i>
+        <p>Nb: {{ com.likes }}</p>
       </div>
       <div class="dislike">
         <i class="fa fa-thumbs-down fa-xl" aria-hidden="true" @click="dislike"></i>
+        <p>Nb: {{ com.dislikes }}</p>
       </div>
     </div>
   </div>
@@ -83,6 +86,7 @@ export default {
 <style scoped>
 .container {
   width: 100%;
+  overflow-y: auto;
 }
 
 h1 {
@@ -116,8 +120,10 @@ h1 {
 
 .title {
   width: 10%;
+  height: 100px;
   font-size: 20px;
   padding-top: 10px;
+  padding-bottom: 10px;
   overflow-y: auto;
 }
 
@@ -130,13 +136,16 @@ h1 {
   object-fit: contain;
   padding-top: 10px;
   padding-bottom: 10px;
- }
+}
+
 .image>img:hover {
-  cursor:zoom-in;
+  cursor: zoom-in;
 }
+
 div>img {
-  cursor:zoom-out;
+  cursor: zoom-out;
 }
+
 .commentaire {
   width: 50%;
   height: 100px;
@@ -148,10 +157,11 @@ div>img {
 .like,
 .dislike {
   width: 7.5%;
-  padding-bottom: 10px;
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
+  gap: 10px;
+padding-top: 10px;
 }
 </style>
