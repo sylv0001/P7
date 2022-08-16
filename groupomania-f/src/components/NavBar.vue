@@ -57,7 +57,8 @@ export default {
 </script>
 
 <style scoped>
-.submenu {position:fixed;
+.submenu {
+    position:fixed;
     display: flex;
     flex-direction: column;
 }
@@ -72,7 +73,7 @@ header {
 }
 
 .header {
-    height: 70px;
+    height: 60px;
     padding: 0 20px;
     max-width: 960px;
     margin: 0 auto;
@@ -115,7 +116,7 @@ nav li {
     display: inline-block;
     margin-left: 25px;
     height: 70px;
-    line-height: 70px;
+    line-height: 65px;
     transition: .5s linear;
 }
 

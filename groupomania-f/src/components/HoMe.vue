@@ -1,40 +1,34 @@
 <template>
   <div class="container">
-
     <h1>Commentaires</h1>
-    <div class="commentaires" v-for="com in coms" :key="com._id">
+    <div class="commentaires" v-for="(com, index) in coms" :key="com._id">
 
       <div class="pseudo" v-text="com.userId.name">
       </div>
       <div class="title" v-text="com.title">
       </div>
       <div class="image">
-        <img :src="com.imageUrl" alt="image du commentaire" @click.stop="displayModal = true">
+        <modale :imageUrl="coms[index].imageUrl" :revele="revele" :toggleModale="toggleModale"></modale>
+        <img class="photo" :src="com.imageUrl" alt="image du commentaire" @click="toggleModale">
       </div>
-
-      <div  v-if="displayModal">
-        <img :src="com.imageUrl" alt="image du commentaire" id="modal">
-      </div>
-
       <div class="commentaire" v-text="com.commentaire">
       </div>
       <div class="like">
         <i class="fa fa-thumbs-up fa-xl" aria-hidden="true" @click="like"></i>
-        <p>Nb: {{ com.likes }}</p>
+        <p>{{ com.likes }}</p>
       </div>
       <div class="dislike">
         <i class="fa fa-thumbs-down fa-xl" aria-hidden="true" @click="dislike"></i>
-        <p>Nb: {{ com.dislikes }}</p>
+        <p>{{ com.dislikes }}</p>
       </div>
     </div>
   </div>
-
 </template>
 
 <script>
 //import axios from "axios";
 import axios from "axios";
-
+import Modale from "./Modale";
 
 export default {
   name: 'HoMe',
@@ -43,7 +37,7 @@ export default {
 
     return {
       coms: [],
-      displayModal: false
+      revele: false
     }
   },
 
@@ -67,17 +61,24 @@ export default {
       .catch(error => console.log(error))
   },
 
-  methods: {
-    onClickOutsode(e) {
-      if (e.target.localName !== "button") {
-        this.displayModal = false;
-      }
-    },
+  components: {
+    modale: Modale
   },
 
-  mounted() {
-    window.addEventListener("click", this.onClickOutsode);
-  },
+  methods: {
+    toggleModale: function () {
+      this.revele = !this.revele;
+    },
+
+    like() {
+
+    },
+
+    dislike() {
+
+    },
+
+  }
 
 }
 </script>
@@ -85,6 +86,7 @@ export default {
 <style scoped>
 .container {
   width: 100%;
+  height: 1500px;
   overflow-y: auto;
 }
 
@@ -163,5 +165,9 @@ div>img {
   align-items: center;
   gap: 5px;
 
+}
+
+.fa-xl:hover {
+  cursor: pointer;
 }
 </style>
