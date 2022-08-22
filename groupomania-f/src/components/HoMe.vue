@@ -1,15 +1,17 @@
 <template>
   <div class="container">
     <h1>Commentaires</h1>
-    <div class="commentaires" v-for="(com, index) in coms" :key="com._id">
+    <div class="commentaires" v-for="(com, index) of coms" :key="index">
 
       <div class="pseudo" v-text="com.userId.name">
       </div>
       <div class="title" v-text="com.title">
       </div>
       <div class="image">
-        <modale :imageUrl="coms[index].imageUrl" :revele="revele" :toggleModale="toggleModale"></modale>
-        <img class="photo" :src="com.imageUrl" alt="image du commentaire" @click="toggleModale">
+        <modale :imageUrl="coms[index].imageUrl" :revele="revele[index]" :index="index" :toggleModale="toggleModale">
+        </modale>
+        <img class="photo" :imageUrl="coms[index].imageUrl" :src="com.imageUrl" alt="image du commentaire"
+          @click="toggleModale(index)">
       </div>
       <div class="commentaire" v-text="com.commentaire">
       </div>
@@ -37,7 +39,8 @@ export default {
 
     return {
       coms: [],
-      revele: false
+      revele: [],
+      imageUrl: ''
     }
   },
 
@@ -55,7 +58,10 @@ export default {
         // this.commentaire = item.commentaire;
         //console.log(response.data),
         //})
-        this.coms = response.data
+        this.coms = response.data,
+        this.coms.foreach((com, index) => {
+          this.revele[index] = false
+        })
       ))
 
       .catch(error => console.log(error))
@@ -66,21 +72,31 @@ export default {
   },
 
   methods: {
-    toggleModale: function () {
-      this.revele = !this.revele;
+    toggleModale: function (index) {
+      this.revele[index] = !this.revele[index];
     },
 
     like() {
+      axios.put('http://localhost:3000/api/coms/:id/like', {
+        headers: {
+          'Authorization': `Bearer ${sessionStorage.token}`,
+        }
+      })
+        .then(response => (
+          console.log(response.data)
+        ))
 
+        .catch(error => console.log(error))
     },
 
-    dislike() {
+  },
 
-    },
+  dislike() {
 
-  }
+  },
 
 }
+
 </script>
 
 <style scoped>
@@ -171,3 +187,5 @@ div>img {
   cursor: pointer;
 }
 </style>
+
+

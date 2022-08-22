@@ -1,6 +1,5 @@
 <template>
   <NavBar></NavBar>
-
   <HoMe></HoMe>
   <FooTer></FooTer>
   <router-view></router-view>
