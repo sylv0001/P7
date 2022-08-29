@@ -1,21 +1,19 @@
 <template>
-    <div class="bloc-modale" v-if="revele">
+    <div class="bloc-modale" v-if="com.isReveled">
         <div class="overlay"></div>
         <div class="modale card">
-            <div @click="toggleModale(index)" class="btn-modale btn btn-danger">X</div>     
-            <img :src="imageUrl" alt="image du commentaire" id="modal">
+            <div @click="toggleModale(com)" class="btn-modale btn btn-danger">X</div>     
+            <img :src="com.imageUrl" alt="image du commentaire" id="modal">
         </div>
     </div>
 </template>
-
 
 <script>
 
 export default {
     name: "Modale",
-    props: ["revele", "toggleModale", "imageUrl", "index"],
-};
-
+    props: ["toggleModale", "com"]
+}
 </script>
 
 
@@ -32,7 +30,7 @@ export default {
 }
 
 .overlay {
-    background: rgba(255, 215, 215, 0.6);
+    background: rgba(255, 215, 215, 0.2);
     position: fixed;
     top: 0;
     bottom: 0;

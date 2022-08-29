@@ -8,7 +8,7 @@
                 <br />
                 <br />
                 <label for="password">Nouveau mot de passe : </label>
-                <input v-model="password" type="password" name="password" placeholder="********" />
+                <input v-model="password" @keyup.enter="newpass()" type="password" name="password" placeholder="********" />
                 <br />
                 <br />
                 <button @click="newpass()" type="button" class="sent">Mettre à jour</button>

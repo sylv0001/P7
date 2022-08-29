@@ -6,7 +6,7 @@
         <label for="email">Email : </label>
         <input v-model="email" type="email" name="email" placeholder="name@fai.country" />
         <label for="password">Mot de passe : </label>
-        <input v-model="password" type="password" name="password" placeholder="********" />
+        <input v-model="password" @keyup.enter="login()" type="password" name="password" placeholder="********" />
         <router-link to="/newpass">Mot de passe oublié ?</router-link>
         <router-link to="/signup">Créer un compte</router-link>
         <button @click="login()" type="button" class="sent">Se connecter</button>

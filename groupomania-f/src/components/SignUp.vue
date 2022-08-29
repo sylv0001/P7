@@ -10,7 +10,7 @@
                 <input v-model="email" type="email" name="email" placeholder="name@fai.country" />
 
                 <label for="password">Mot de passe : </label>
-                <input v-model="password" type="password" name="password" placeholder="********" />
+                <input v-model="password" @keyup.enter="signup()" type="password" name="password" placeholder="********" />
 
                 <button @click="signup()" type="button" class="sent">Créer</button>
             </form>

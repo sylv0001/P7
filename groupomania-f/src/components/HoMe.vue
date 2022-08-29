@@ -8,10 +8,8 @@
       <div class="title" v-text="com.title">
       </div>
       <div class="image">
-        <modale :imageUrl="coms[index].imageUrl" :revele="revele[index]" :index="index" :toggleModale="toggleModale">
-        </modale>
-        <img class="photo" :imageUrl="coms[index].imageUrl" :src="com.imageUrl" alt="image du commentaire"
-          @click="toggleModale(index)">
+        <modale :com="com" :toggleModale="toggleModale"></modale>
+        <img class="photo" :src="com.imageUrl" alt="image du commentaire" @click="toggleModale(com)">
       </div>
       <div class="commentaire" v-text="com.commentaire">
       </div>
@@ -40,8 +38,8 @@ export default {
     return {
       coms: [],
       revele: [],
-      imageUrl: ''
-    }
+      imageUrl: '',
+     }
   },
 
   created() {
@@ -59,10 +57,11 @@ export default {
         //console.log(response.data),
         //})
         this.coms = response.data,
-        this.coms.foreach((com, index) => {
-          this.revele[index] = false
-        })
-      ))
+this.coms.foreach(com => {
+com.isReveled = false
+})
+        )
+      )
 
       .catch(error => console.log(error))
   },
@@ -72,8 +71,8 @@ export default {
   },
 
   methods: {
-    toggleModale: function (index) {
-      this.revele[index] = !this.revele[index];
+    toggleModale: function (com) {
+      com.isReveled = !com.isReveled;
     },
 
     like() {
@@ -102,7 +101,7 @@ export default {
 <style scoped>
 .container {
   width: 100%;
-  height: 1500px;
+  height: auto;
   overflow-y: auto;
 }
 
