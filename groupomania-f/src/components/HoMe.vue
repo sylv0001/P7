@@ -8,18 +8,18 @@
       <div class="title" v-text="com.title">
       </div>
       <div class="image">
-        <modale :com="com" :toggleModale="toggleModale"></modale>
-        <img class="photo" :src="com.imageUrl" alt="image du commentaire" @click="toggleModale(com)">
+        <modale :image-url="com.imageUrl" :revele="com.revele" @toggle-modale="com.revele = false"></modale>
+        <img class="photo" :src="com.imageUrl" alt="image du commentaire" @click="com.revele = true">
       </div>
       <div class="commentaire" v-text="com.commentaire">
       </div>
       <div class="like">
-        <i class="fa fa-thumbs-up fa-xl" aria-hidden="true" @click="like"></i>
-        <p>{{ com.likes }}</p>
+        <span @click="like(com._id)"><i class="fa fa-thumbs-up fa-xl" aria-hidden="true"></i></span>
+        <p>{{  com.likes  }}</p>
       </div>
       <div class="dislike">
-        <i class="fa fa-thumbs-down fa-xl" aria-hidden="true" @click="dislike"></i>
-        <p>{{ com.dislikes }}</p>
+        <span @click="dislike()"><i class="fa fa-thumbs-down fa-xl" aria-hidden="true" ></i></span>
+        <p>{{  com.dislikes  }}</p>
       </div>
     </div>
   </div>
@@ -37,9 +37,8 @@ export default {
 
     return {
       coms: [],
-      revele: [],
       imageUrl: '',
-     }
+    }
   },
 
   created() {
@@ -57,11 +56,11 @@ export default {
         //console.log(response.data),
         //})
         this.coms = response.data,
-this.coms.foreach(com => {
-com.isReveled = false
-})
-        )
-      )
+        this.coms.forEach(com => {
+          com.revele = false
+          this.id = com._id
+        })
+        ))
 
       .catch(error => console.log(error))
   },
@@ -70,38 +69,63 @@ com.isReveled = false
     modale: Modale
   },
 
-  methods: {
-    toggleModale: function (com) {
-      com.isReveled = !com.isReveled;
-    },
+methods: {
+  like(id) {
 
-    like() {
-      axios.put('http://localhost:3000/api/coms/:id/like', {
-        headers: {
-          'Authorization': `Bearer ${sessionStorage.token}`,
-        }
-      })
-        .then(response => (
-          console.log(response.data)
-        ))
+    //*************************************************************
+    //***************************ANGULAR***************************
+    //*************************************************************
 
-        .catch(error => console.log(error))
-    },
+    //   likeSauce(id: string, like: boolean) {
+    //   return this.http.post<{ message: string }>(
+    //     'http://localhost:3000/api/sauces/' + id + '/like',
+    //     { userId: this.auth.getUserId(), like: like ? 1 : 0 }
+    //   ).pipe(
+    //     mapTo(like),
+    //     catchError(error => throwError(error.error.message))
+    //   );
+    // }
 
-  },
+    // dislikeSauce(id: string, dislike: boolean) {
+    //   return this.http.post<{ message: string }>(
+    //     'http://localhost:3000/api/sauces/' + id + '/like',
+    //     { userId: this.auth.getUserId(), like: dislike ? -1 : 0 }
+    //   ).pipe(
+    //     mapTo(dislike),
+    //     catchError(error => throwError(error.error.message))
+    //   );
+    // }
 
-  dislike() {
 
-  },
+    //**********************TEST VUE3*******************************
 
+
+    // const formData = new FormData()
+    // formData.append('id', coms[index]._id)
+    // formData.append('like', 1)
+    // axios.post('http://localhost:3000/api/coms/:id/like', formData, {
+    //           headers: {
+    //               'Authorization': `Bearer ${sessionStorage.token}`,
+    //           }
+    //       })
+
+    //const love = { userId: sessionStorage.userId, like: 1 };
+    //console.log(sessionStorage.userId)
+    axios.post(('http://localhost:3000/api/coms/' + id + '/like', { userId: sessionStorage.userId, like: 1 }), {
+      headers: {
+        'Authorization': `Bearer ${sessionStorage.token}`,
+      }
+    })
+      
+  }
 }
-
+}
 </script>
 
 <style scoped>
 .container {
   width: 100%;
-  height: auto;
+  height: 1500px;
   overflow-y: auto;
 }
 
@@ -149,6 +173,7 @@ h1 {
 
 .image>img {
   width: 100px;
+  height: 75px;
   object-fit: contain;
   padding-top: 10px;
   padding-bottom: 10px;
@@ -186,5 +211,3 @@ div>img {
   cursor: pointer;
 }
 </style>
-
-

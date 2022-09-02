@@ -1,9 +1,9 @@
 <template>
-    <div class="bloc-modale" v-if="com.isReveled">
-        <div class="overlay"></div>
+    <div class="bloc-modale" v-if="revele">
+        <div class="overlay" @click="toggleModale"></div>
         <div class="modale card">
-            <div @click="toggleModale(com)" class="btn-modale btn btn-danger">X</div>     
-            <img :src="com.imageUrl" alt="image du commentaire" id="modal">
+            <img src='../assets/images/closed.png' class="btn-modale btn btn-danger" @click="$emit('toggle-modale')">
+            <img :src="imageUrl" alt="image du commentaire" id="modal">
         </div>
     </div>
 </template>
@@ -12,8 +12,9 @@
 
 export default {
     name: "Modale",
-    props: ["toggleModale", "com"]
-}
+    props: ["revele", "imageUrl"],
+};
+
 </script>
 
 
@@ -56,6 +57,7 @@ export default {
     top: 10px;
     right: 10px;
 }
+
 .btn-danger:hover {
     background-color: red;
     cursor: default;

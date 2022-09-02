@@ -17,7 +17,6 @@
 
 <script>
 import axios from "axios";
-
 export default {
   name: 'LogIn',
   data() {
@@ -30,13 +29,11 @@ export default {
   methods: {
     login() {
       const user = { email: this.email, password: this.password };
-
       axios.post("http://localhost:3000/api/auth/login", user)
-
         .then(response => {
+          console.log(response.data);
           sessionStorage.setItem("token", response.data.token);
           sessionStorage.setItem('userId', response.data.userId);
-          sessionStorage.setItem('name', response.data.name);
           location = "http://localhost:3001/home"
         })
         .catch(error => {
@@ -50,7 +47,6 @@ export default {
     },
   }
 }
-
 </script>
 
 <style scoped>
@@ -62,15 +58,12 @@ export default {
   flex-direction: column;
   align-items: center;
 }
-
 h1 {
   margin-top: 10px;
 }
-
 a {
   font-size: 16px;
 }
-
 .form {
   width: 500px;
   height: 400px;
@@ -81,7 +74,6 @@ a {
   border: 2px solid #4E5166;
   border-radius: 5%
 }
-
 form {
   font-size: 25px;
   display: flex;
@@ -89,21 +81,17 @@ form {
   align-items: center;
   gap: 8px;
 }
-
 input {
   font-size: 25px;
 }
-
 .sent {
   font-size: 20px;
   margin-top: 40px;
   background-color: #FFF;
 }
-
 .sent:hover {
   background-color: #ffd7d7;
 }
-
 .sent::after {
   background-color: #FD2D01;
 }
