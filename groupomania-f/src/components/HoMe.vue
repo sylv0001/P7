@@ -15,11 +15,11 @@
       </div>
       <div class="like">
         <span @click="like(com._id)"><i class="fa fa-thumbs-up fa-xl" aria-hidden="true"></i></span>
-        <p>{{  com.likes  }}</p>
+        <p>{{ com.likes }}</p>
       </div>
       <div class="dislike">
-        <span @click="dislike()"><i class="fa fa-thumbs-down fa-xl" aria-hidden="true" ></i></span>
-        <p>{{  com.dislikes  }}</p>
+        <span @click="dislike()"><i class="fa fa-thumbs-down fa-xl" aria-hidden="true"></i></span>
+        <p>{{ com.dislikes }}</p>
       </div>
     </div>
   </div>
@@ -37,7 +37,7 @@ export default {
 
     return {
       coms: [],
-      imageUrl: '',
+      imageUrl: ''
     }
   },
 
@@ -48,19 +48,12 @@ export default {
       }
     })
       .then(response => (
-        //response.data.forEach(item => {
-        // this.pseudo = item.userId.name;
-        // this.title = item.title;
-        //this.image = item.imageUrl;
-        // this.commentaire = item.commentaire;
-        //console.log(response.data),
-        //})
         this.coms = response.data,
         this.coms.forEach(com => {
           com.revele = false
           this.id = com._id
         })
-        ))
+      ))
 
       .catch(error => console.log(error))
   },
@@ -69,56 +62,25 @@ export default {
     modale: Modale
   },
 
-methods: {
-  like(id) {
-
-    //*************************************************************
-    //***************************ANGULAR***************************
-    //*************************************************************
-
-    //   likeSauce(id: string, like: boolean) {
-    //   return this.http.post<{ message: string }>(
-    //     'http://localhost:3000/api/sauces/' + id + '/like',
-    //     { userId: this.auth.getUserId(), like: like ? 1 : 0 }
-    //   ).pipe(
-    //     mapTo(like),
-    //     catchError(error => throwError(error.error.message))
-    //   );
-    // }
-
-    // dislikeSauce(id: string, dislike: boolean) {
-    //   return this.http.post<{ message: string }>(
-    //     'http://localhost:3000/api/sauces/' + id + '/like',
-    //     { userId: this.auth.getUserId(), like: dislike ? -1 : 0 }
-    //   ).pipe(
-    //     mapTo(dislike),
-    //     catchError(error => throwError(error.error.message))
-    //   );
-    // }
-
-
-    //**********************TEST VUE3*******************************
-
-
-    // const formData = new FormData()
-    // formData.append('id', coms[index]._id)
-    // formData.append('like', 1)
-    // axios.post('http://localhost:3000/api/coms/:id/like', formData, {
-    //           headers: {
-    //               'Authorization': `Bearer ${sessionStorage.token}`,
-    //           }
-    //       })
-
-    //const love = { userId: sessionStorage.userId, like: 1 };
-    //console.log(sessionStorage.userId)
-    axios.post(('http://localhost:3000/api/coms/' + id + '/like', { userId: sessionStorage.userId, like: 1 }), {
-      headers: {
-        'Authorization': `Bearer ${sessionStorage.token}`,
-      }
-    })
-      
+  methods: {
+    //like to like
+    //ANGULAR : { userId: this.auth.getUserId(), like: like ? 1 : 0 }
+    like(id) {
+      axios.post('http://localhost:3000/api/coms/' + id + '/like', { userId: sessionStorage.userId, like: 1 }, {
+        headers: {
+          'Authorization': `Bearer ${sessionStorage.token}`,
+        }
+      })
+      .then(()=>window.location.reload())
+    },
+    dislike(id) {
+      axios.post('http://localhost:3000/api/coms/' + id + '/like', { userId: sessionStorage.userId, like: -1 }, {
+        headers: {
+          'Authorization': `Bearer ${sessionStorage.token}`,
+        }
+      })
+    },
   }
-}
 }
 </script>
 
