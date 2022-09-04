@@ -18,7 +18,7 @@
         <p>{{ com.likes }}</p>
       </div>
       <div class="dislike">
-        <span @click="dislike()"><i class="fa fa-thumbs-down fa-xl" aria-hidden="true"></i></span>
+        <span @click="dislike(com._id)"><i class="fa fa-thumbs-down fa-xl" aria-hidden="true"></i></span>
         <p>{{ com.dislikes }}</p>
       </div>
     </div>
@@ -49,9 +49,10 @@ export default {
     })
       .then(response => (
         this.coms = response.data,
-        this.coms.forEach(com => {
+                this.coms.forEach(com => {
           com.revele = false
           this.id = com._id
+          console.log(com.userId._id)
         })
       ))
 
@@ -71,14 +72,47 @@ export default {
           'Authorization': `Bearer ${sessionStorage.token}`,
         }
       })
-      .then(()=>window.location.reload())
+      //.then(()=>window.location.reload())
+      //Update value of likes
+    .then(()=>axios.get('http://localhost:3000/api/coms', {
+      headers: {
+        'Authorization': `Bearer ${sessionStorage.token}`,
+      }
+    })
+    .then(response => (
+        this.coms = response.data,
+        this.coms.forEach(com => {
+          com.revele = false
+          this.id = com._id
+        })
+      ))
+      .catch(error => console.log(error))
+    )
     },
+
+    //Dislike to dislike
     dislike(id) {
       axios.post('http://localhost:3000/api/coms/' + id + '/like', { userId: sessionStorage.userId, like: -1 }, {
         headers: {
           'Authorization': `Bearer ${sessionStorage.token}`,
         }
       })
+      //.then(()=>window.location.reload())
+      //Update value of dislikes
+      .then(()=>axios.get('http://localhost:3000/api/coms', {
+      headers: {
+        'Authorization': `Bearer ${sessionStorage.token}`,
+      }
+    })
+    .then(response => (
+        this.coms = response.data,
+        this.coms.forEach(com => {
+          com.revele = false
+          this.id = com._id
+        })
+      ))
+      .catch(error => console.log(error))
+    )     
     },
   }
 }
