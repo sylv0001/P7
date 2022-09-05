@@ -39,7 +39,7 @@ export default {
     return {
       coms: [],
       imageUrl: '',
-      user: false
+      //user: false
     }
   },
 
@@ -78,7 +78,7 @@ export default {
           'Authorization': `Bearer ${sessionStorage.token}`,
         }
       })
-      //to update number of likes in real time
+      //Update number of likes in real time
       .then(response => {
         this.coms.forEach(com => {
           if(id === com._id) {
@@ -91,27 +91,21 @@ export default {
 
     //Dislike to dislike
     dislike(id) {
-      axios.post('http://localhost:3000/api/coms/' + id + '/like', { userId: sessionStorage.userId, like: -1 }, {
+      let dislikeObject = { userId: sessionStorage.userId, like: -1}
+      axios.post('http://localhost:3000/api/coms/' + id + '/like', dislikeObject, {
         headers: {
           'Authorization': `Bearer ${sessionStorage.token}`,
         }
       })
-      //.then(()=>window.location.reload()) => NON !!!
-      //Update value of dislikes
-      .then(()=>axios.get('http://localhost:3000/api/coms', {
-      headers: {
-        'Authorization': `Bearer ${sessionStorage.token}`,
-      }
-    })
-    .then(response => (
-        this.coms = response.data,
+      //Update number of dislikes in real time
+      .then(response => {
         this.coms.forEach(com => {
-          com.revele = false
-          this.id = com._id
+          if(id === com._id) {
+          com.dislikes = response.data.numDislikes+2
+          }
         })
-      ))
-      .catch(error => console.log(error))
-    )     
+      }
+      )  
     },
   }
 }
