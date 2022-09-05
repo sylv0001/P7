@@ -11,7 +11,7 @@ exports.createCom = (req, res, next) => {
   const com = new Com({
     ...comObject,
     userId: req.auth.userId,
-    imageUrl: `${req.protocol}://${req.get('host')}/img/${req.file.filename}`,
+    imageUrl: req.fil ? `${req.protocol}://${req.get('host')}/img/${req.file.filename}` : '',
   });
   
   //Record Comments in DB
@@ -168,12 +168,13 @@ exports.likeCom = (req, res, next) => {
   if (req.body.like === 1) {
     Com.findOne({ _id: req.params.id }).then(
       (com) => {
+        const numLikes = com.likes+1;
         //Looking for if user is or not in array "usersLiked"
         //If he's not in : we incremente "Like" and add user in the array "usersLiked"
         if (!com.usersLiked.includes(req.body.userId)) {
           Com.updateOne({ _id: req.params.id }, { $inc: { likes: +1 }, $push: { usersLiked: req.body.userId } }
           )
-            .then(() => res.status(200).json({ message: "Like Ok !" }))
+            .then(() => res.status(200).json({ numLikes }))
             .catch((error) => res.status(400).json({ error }));
         }
       })
@@ -198,12 +199,11 @@ exports.likeCom = (req, res, next) => {
   if (req.body.like === 0) {
     Com.findOne({ _id: req.params.id }).then(
       (com) => {
-        
         //If user is in array usersLiked : we decremente "Like" and delete user in the array "usersLiked"
         if (com.usersLiked.includes(req.body.userId)) {
           Com.updateOne({ _id: req.params.id }, { $inc: { likes: -1 }, $pull: { usersLiked: req.body.userId } }
           )
-            .then(() => res.status(200).json({ message: "Delete like Ok !" }))
+            .then(() => res.status(200).json({ message: "Delete like Ok!" }))
             .catch((error) => res.status(400).json({ error }));
         }
 

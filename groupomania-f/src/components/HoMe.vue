@@ -30,6 +30,7 @@
 import axios from "axios";
 import Modale from "./Modale";
 
+
 export default {
   name: 'HoMe',
 
@@ -37,7 +38,8 @@ export default {
 
     return {
       coms: [],
-      imageUrl: ''
+      imageUrl: '',
+      user: false
     }
   },
 
@@ -49,13 +51,15 @@ export default {
     })
       .then(response => (
         this.coms = response.data,
-                this.coms.forEach(com => {
+        console.log(response.data),
+        this.coms.forEach(com => {
           com.revele = false
           this.id = com._id
+          //this.user = com.usersLiked.includes(sessionStorage.userId)
+          console.log(this.user)
           console.log(com.userId._id)
         })
       ))
-
       .catch(error => console.log(error))
   },
 
@@ -65,29 +69,24 @@ export default {
 
   methods: {
     //like to like
-    //ANGULAR : { userId: this.auth.getUserId(), like: like ? 1 : 0 }
     like(id) {
-      axios.post('http://localhost:3000/api/coms/' + id + '/like', { userId: sessionStorage.userId, like: 1 }, {
+      let likeObject = { userId: sessionStorage.userId, like: 1}
+      // if (this.user)
+      // {likeObject = { userId: sessionStorage.userId, like: 0 }}
+      axios.post('http://localhost:3000/api/coms/' + id + '/like', likeObject, {
         headers: {
           'Authorization': `Bearer ${sessionStorage.token}`,
         }
       })
-      //.then(()=>window.location.reload())
-      //Update value of likes
-    .then(()=>axios.get('http://localhost:3000/api/coms', {
-      headers: {
-        'Authorization': `Bearer ${sessionStorage.token}`,
-      }
-    })
-    .then(response => (
-        this.coms = response.data,
+      //to update number of likes in real time
+      .then(response => {
         this.coms.forEach(com => {
-          com.revele = false
-          this.id = com._id
+          if(id === com._id) {
+          com.likes = response.data.numLikes
+          }
         })
-      ))
-      .catch(error => console.log(error))
-    )
+      }
+      )
     },
 
     //Dislike to dislike
@@ -97,7 +96,7 @@ export default {
           'Authorization': `Bearer ${sessionStorage.token}`,
         }
       })
-      //.then(()=>window.location.reload())
+      //.then(()=>window.location.reload()) => NON !!!
       //Update value of dislikes
       .then(()=>axios.get('http://localhost:3000/api/coms', {
       headers: {
@@ -121,7 +120,6 @@ export default {
 <style scoped>
 .container {
   width: 100%;
-  height: 1500px;
   overflow-y: auto;
 }
 
