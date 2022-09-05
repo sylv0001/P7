@@ -9,8 +9,9 @@
       </div>
       <div class="image">
         <modale :image-url="com.imageUrl" :revele="com.revele" @toggle-modale="com.revele = false"></modale>
-        <img class="photo" :src="com.imageUrl" alt="image du commentaire" @click="com.revele = true">
-      </div>
+        <div class="blocImg" v-if="com.imageUrl"><img class="photo" :src="com.imageUrl" alt="image du commentaire" @click="com.revele = true">
+        </div>
+        </div>
       <div class="commentaire" v-text="com.commentaire">
       </div>
       <div class="like">
@@ -56,7 +57,7 @@ export default {
           com.revele = false
           this.id = com._id
           //this.user = com.usersLiked.includes(sessionStorage.userId)
-          console.log(this.user)
+          //console.log(this.user)
           console.log(com.userId._id)
         })
       ))
@@ -158,8 +159,10 @@ h1 {
 .image {
   width: 15%;
 }
-
-.image>img {
+.blocImg {
+  width: 100%;
+}
+.blocImg>img {
   width: 100px;
   height: 75px;
   object-fit: contain;
@@ -167,7 +170,7 @@ h1 {
   padding-bottom: 10px;
 }
 
-.image>img:hover {
+.blocImg>img:hover {
   cursor: zoom-in;
 }
 
