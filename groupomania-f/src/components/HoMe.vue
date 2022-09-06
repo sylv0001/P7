@@ -9,9 +9,10 @@
       </div>
       <div class="image">
         <modale :image-url="com.imageUrl" :revele="com.revele" @toggle-modale="com.revele = false"></modale>
-        <div class="blocImg" v-if="com.imageUrl"><img class="photo" :src="com.imageUrl" alt="image du commentaire" @click="com.revele = true">
+        <div class="blocImg" v-if="com.imageUrl"><img class="photo" :src="com.imageUrl" alt="image du commentaire"
+            @click="com.revele = true">
         </div>
-        </div>
+      </div>
       <div class="commentaire" v-text="com.commentaire">
       </div>
       <div class="like">
@@ -56,8 +57,8 @@ export default {
         this.coms.forEach(com => {
           com.revele = false
           this.id = com._id
-          //this.user = com.usersLiked.includes(sessionStorage.userId)
-          //console.log(this.user)
+          this.userLik = com.usersLiked.includes(sessionStorage.userId)
+          this.userDislik = com.usersDisliked.includes(sessionStorage.userId)
           console.log(com.userId._id)
         })
       ))
@@ -69,44 +70,50 @@ export default {
   },
 
   methods: {
-    //like to like
+    //like to like or reset like
     like(id) {
-      let likeObject = { userId: sessionStorage.userId, like: 1}
-      // if (this.user)
-      // {likeObject = { userId: sessionStorage.userId, like: 0 }}
+      let likeObject ={}
+      //If the user is not in the usersLikes array -> + like
+      if(!this.userLik) {likeObject = { userId: sessionStorage.userId, like: 1 }}
+      //If the user is in the usersLikes array -> reset like
+      else { likeObject = { userId: sessionStorage.userId, like: 0 } }
       axios.post('http://localhost:3000/api/coms/' + id + '/like', likeObject, {
         headers: {
           'Authorization': `Bearer ${sessionStorage.token}`,
         }
       })
-      //Update number of likes in real time
-      .then(response => {
-        this.coms.forEach(com => {
-          if(id === com._id) {
-          com.likes = response.data.numLikes
-          }
-        })
-      }
-      )
+        //Update number of likes in real time
+        .then(response => {
+          this.coms.forEach(com => {
+            if (id === com._id) {
+              { com.likes = response.data.numLikes }
+            }
+          })
+        }
+        )
     },
 
-    //Dislike to dislike
+    //Dislike to dislike or reset dislike
     dislike(id) {
-      let dislikeObject = { userId: sessionStorage.userId, like: -1}
+      let dislikeObject ={}
+      //If the user is not in the usersDislikes array -> + dislike
+      if(!this.userDislik) {dislikeObject = { userId: sessionStorage.userId, like: -1 }}
+      //If the user is in the usersDislikes array -> reset dislike
+      else { dislikeObject = { userId: sessionStorage.userId, like: 0 } }
       axios.post('http://localhost:3000/api/coms/' + id + '/like', dislikeObject, {
         headers: {
           'Authorization': `Bearer ${sessionStorage.token}`,
         }
       })
-      //Update number of dislikes in real time
-      .then(response => {
-        this.coms.forEach(com => {
-          if(id === com._id) {
-          com.dislikes = response.data.numDislikes+2
-          }
-        })
-      }
-      )  
+        //Update number of dislikes in real time
+        .then(response => {
+          this.coms.forEach(com => {
+            if (id === com._id) {
+              com.dislikes = response.data.numDislikes
+            }
+          })
+        }
+        )
     },
   }
 }
@@ -157,11 +164,13 @@ h1 {
 }
 
 .image {
-  width: 15%;
+  width: 12%;
 }
+
 .blocImg {
   width: 100%;
 }
+
 .blocImg>img {
   width: 100px;
   height: 75px;
@@ -179,7 +188,7 @@ div>img {
 }
 
 .commentaire {
-  width: 50%;
+  width: 53%;
   height: 100px;
   font-size: 20px;
   padding: 10px;

@@ -13,7 +13,7 @@ exports.createCom = (req, res, next) => {
     userId: req.auth.userId,
     imageUrl: req.fil ? `${req.protocol}://${req.get('host')}/img/${req.file.filename}` : '',
   });
-  
+
   //Record Comments in DB
   com.save()
     .then(() => res.status(201).json({ message: 'Commentaire enregistré !' }))
@@ -22,7 +22,7 @@ exports.createCom = (req, res, next) => {
 
 //Screen All Comments
 exports.getAllCom = (req, res, next) => {
-  
+
   //Find all Comments to screen
   Com.find().find().populate('userId', 'name').then(
     (coms) => {
@@ -39,7 +39,7 @@ exports.getAllCom = (req, res, next) => {
 
 //Screen One Comment
 exports.getOneCom = (req, res, next) => {
-  
+
   //Find one select Comment 
   Com.findOne({
     _id: req.params.id
@@ -59,7 +59,7 @@ exports.getOneCom = (req, res, next) => {
 
 //Delete One Comment
 exports.deleteCom = (req, res, next) => {
-  
+
   //Find one select Comment
   Com.findOne({ _id: req.params.id }).then(
     (com) => {
@@ -73,7 +73,7 @@ exports.deleteCom = (req, res, next) => {
           error: new Error('Unauthorized request!')
         });
       }
-      
+
       //Delete comment if exist just by creator user
       Com.deleteOne({ _id: req.params.id }).then(
         () => {
@@ -104,10 +104,10 @@ exports.deleteCom = (req, res, next) => {
 
 //Modify One Comment
 exports.modifyCom = (req, res, next) => {
- 
+
   // if change image
   if (req.file) {
-    
+
     //Delete Old File on hard-disk
     Com.findOne({ _id: req.params.id }).then(
       (com) => {
@@ -121,7 +121,7 @@ exports.modifyCom = (req, res, next) => {
         })
       }
     );
-    
+
     //Update image
     const parse = JSON.parse(req.body.com)
     Com.updateOne({ _id: req.params.id }, { ...parse, imageUrl: `${req.protocol}://${req.get('host')}/img/${req.file.filename}`, _id: req.params.id })
@@ -139,7 +139,7 @@ exports.modifyCom = (req, res, next) => {
         }
       );
   }
-  
+
   // if not change image
   else {
     Com.updateOne({ _id: req.params.id }, { ...req.body, _id: req.params.id })
@@ -164,15 +164,22 @@ exports.modifyCom = (req, res, next) => {
 
 exports.likeCom = (req, res, next) => {
 
-  ////////////If user add "like" to "like"////////////
+  ////////////If user add "like" to like or delete his like////////////
   if (req.body.like === 1) {
     Com.findOne({ _id: req.params.id }).then(
       (com) => {
-        const numLikes = com.likes+1;
-        //Looking for if user is or not in array "usersLiked"
-        //If he's not in : we incremente "Like" and add user in the array "usersLiked"
+        let numLikes = com.likes + 1;
+        //If user isn't in array "usersLiked", I incremente "Like" and add user in the array "usersLiked"
         if (!com.usersLiked.includes(req.body.userId)) {
           Com.updateOne({ _id: req.params.id }, { $inc: { likes: +1 }, $push: { usersLiked: req.body.userId } }
+          )
+            .then(() => res.status(200).json({ numLikes }))
+            .catch((error) => res.status(400).json({ error }));
+        }
+        else {
+          //If user is in array usersLiked, I decremente "Like" and delete user in the array "usersLiked"
+          let numLikes = com.likes - 1;
+          Com.updateOne({ _id: req.params.id }, { $inc: { likes: -1 }, $pull: { usersLiked: req.body.userId } }
           )
             .then(() => res.status(200).json({ numLikes }))
             .catch((error) => res.status(400).json({ error }));
@@ -180,43 +187,26 @@ exports.likeCom = (req, res, next) => {
       })
   }
 
-  ////////////If user add "like" to "dislike"////////////
+  ////////////If user add "like" to dislike or delete his dislike////////////
   if (req.body.like === -1) {
     Com.findOne({ _id: req.params.id }).then(
       (com) => {
-        const numDislikes = com.likes-1;
-        //Looking for if user is or not in array "usersDisliked"
-        //If he's not in : we incremente "Dislike" and we add user in the array "usersDisliked"
+        let numDislikes = com.dislikes + 1;
+        //If user isn't in array "usersDisliked", I incremente "Dislike" and add user in the array "usersDisliked"
         if (!com.usersDisliked.includes(req.body.userId)) {
           Com.updateOne({ _id: req.params.id }, { $inc: { dislikes: +1 }, $push: { usersDisliked: req.body.userId } }
           )
             .then(() => res.status(200).json({ numDislikes }))
             .catch((error) => res.status(400).json({ error }));
         }
-      })
-  }
-
-  ////////////If user "like" to delete his "like" or his "dislike"////////////
-  if (req.body.like === 0) {
-    Com.findOne({ _id: req.params.id }).then(
-      (com) => {
-        //If user is in array usersLiked : I decremente "Like" and delete user in the array "usersLiked"
-        if (com.usersLiked.includes(req.body.userId)) {
-          Com.updateOne({ _id: req.params.id }, { $inc: { likes: -1 }, $pull: { usersLiked: req.body.userId } }
-          )
-            .then(() => res.status(200).json({ message: "Delete like Ok!" }))
-            .catch((error) => res.status(400).json({ error }));
-        }
-
-        //If user is in array usersDisliked : I decremente "Dislike" and delete user in the array "usersLiked"
-        if (com.usersDisliked.includes(req.body.userId)) {
+        else {
+          //If user is in array usersDisliked, I decremente "Dislike" and delete user in the array "usersDisliked"
+          let numDislikes = com.dislikes - 1;
           Com.updateOne({ _id: req.params.id }, { $inc: { dislikes: -1 }, $pull: { usersDisliked: req.body.userId } }
           )
-            .then(() => res.status(200).json({ message: "Delete dislike Ok !" }))
+            .then(() => res.status(200).json({ numDislikes }))
             .catch((error) => res.status(400).json({ error }));
         }
-
       })
   }
-
 }
