@@ -24,6 +24,10 @@
         <span @click="dislike(com._id)"><i class="fa fa-thumbs-down fa-xl" aria-hidden="true"></i></span>
         <p>{{ com.dislikes }}</p>
       </div>
+      <div class="DeleteAndModify">
+        <button @click="del" type="button">Supprimer</button>
+        <button @click="modify" type="button">Modifier</button>
+      </div>
     </div>
   </div>
 </template>
@@ -150,7 +154,7 @@ h1 {
 }
 
 .pseudo {
-  width: 10%;
+  width: 8%;
   font-size: 20px;
   padding-top: 10px;
 }
@@ -165,7 +169,7 @@ h1 {
 }
 
 .image {
-  width: 12%;
+  width: 10%;
 }
 
 .blocImg {
@@ -189,7 +193,7 @@ div>img {
 }
 
 .commentaire {
-  width: 53%;
+  width: 50%;
   height: 100px;
   font-size: 20px;
   padding: 10px;
@@ -210,5 +214,15 @@ div>img {
 
 .fa-xl:hover {
   cursor: pointer;
+}
+
+.DeleteAndModify {
+  width: 7%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  border: 1px solid #4E5166;
 }
 </style>
