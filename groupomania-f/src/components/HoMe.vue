@@ -17,6 +17,7 @@
       </div>
       <div class="like">
         <span @click="like(com._id)"><i class="fa fa-thumbs-up fa-xl" aria-hidden="true"></i></span>
+        <!--v-show="!com.usersDisliked.includes(com.userId._id)"-->
         <p>{{ com.likes }}</p>
       </div>
       <div class="dislike">

@@ -168,6 +168,7 @@ exports.likeCom = (req, res, next) => {
   if (req.body.like === 1) {
     Com.findOne({ _id: req.params.id }).then(
       (com) => {
+        if (!com.usersDisliked.includes(req.body.userId)) { // To allow just the "like" or "dislike" but not both
         let numLikes = com.likes + 1;
         //If user isn't in array "usersLiked", I incremente "Like" and add user in the array "usersLiked"
         if (!com.usersLiked.includes(req.body.userId)) {
@@ -184,13 +185,20 @@ exports.likeCom = (req, res, next) => {
             .then(() => res.status(200).json({ numLikes }))
             .catch((error) => res.status(400).json({ error }));
         }
+      }
+      else {
+        return
+      }
       })
+    
   }
 
+  
   ////////////If user add "like" to dislike or delete his dislike////////////
   if (req.body.like === -1) {
     Com.findOne({ _id: req.params.id }).then(
       (com) => {
+        if (!com.usersLiked.includes(req.body.userId)) { // To allow just the "like" or "dislike" but not both
         let numDislikes = com.dislikes + 1;
         //If user isn't in array "usersDisliked", I incremente "Dislike" and add user in the array "usersDisliked"
         if (!com.usersDisliked.includes(req.body.userId)) {
@@ -207,6 +215,10 @@ exports.likeCom = (req, res, next) => {
             .then(() => res.status(200).json({ numDislikes }))
             .catch((error) => res.status(400).json({ error }));
         }
-      })
+      }
+      else {
+        return
+      }
+    })
   }
 }
