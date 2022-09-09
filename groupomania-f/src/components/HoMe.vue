@@ -25,8 +25,8 @@
         <p>{{ com.dislikes }}</p>
       </div>
       <div class="DeleteAndModify">
-        <button @click="del" type="button">Supprimer</button>
-        <button @click="modify" type="button">Modifier</button>
+        <button @click="del(com._id)" type="button">Supprimer</button>
+        <button @click="modify(com._id)" type="button">Modifier</button>
       </div>
     </div>
   </div>
@@ -36,20 +36,15 @@
 //import axios from "axios";
 import axios from "axios";
 import Modale from "./Modale";
-
-
 export default {
   name: 'HoMe',
-
   data() {
-
     return {
       coms: [],
       imageUrl: '',
       //user: false
     }
   },
-
   created() {
     axios.get('http://localhost:3000/api/coms', {
       headers: {
@@ -69,11 +64,9 @@ export default {
       ))
       .catch(error => console.log(error))
   },
-
   components: {
     modale: Modale
   },
-
   methods: {
     //like to like or reset like
     like(id) {
@@ -97,7 +90,6 @@ export default {
         }
         )
     },
-
     //Dislike to dislike or reset dislike
     dislike(id) {
       let dislikeObject ={}
@@ -127,13 +119,12 @@ export default {
 <style scoped>
 .container {
   width: 100%;
+  padding-bottom: 80px;
   overflow-y: auto;
 }
-
 h1 {
   text-align: center;
 }
-
 .commentaires {
   width: 90%;
   margin-left: auto;
@@ -142,7 +133,6 @@ h1 {
   flex-direction: row;
   justify-content: center;
 }
-
 .pseudo,
 .title,
 .image,
@@ -152,13 +142,11 @@ h1 {
   border: 1px solid #4E5166;
   text-align: center;
 }
-
 .pseudo {
-  width: 8%;
+  width: 10%;
   font-size: 20px;
   padding-top: 10px;
 }
-
 .title {
   width: 10%;
   height: 100px;
@@ -167,15 +155,12 @@ h1 {
   overflow-y: auto;
   hyphens: auto;
 }
-
 .image {
-  width: 10%;
+  width: 12%;
 }
-
 .blocImg {
   width: 100%;
 }
-
 .blocImg>img {
   width: 100px;
   height: 75px;
@@ -183,23 +168,19 @@ h1 {
   padding-top: 10px;
   padding-bottom: 10px;
 }
-
 .blocImg>img:hover {
   cursor: zoom-in;
 }
-
 div>img {
   cursor: zoom-out;
 }
-
 .commentaire {
-  width: 50%;
+  width: 53%;
   height: 100px;
   font-size: 20px;
   padding: 10px;
   overflow-y: auto;
 }
-
 .like,
 .dislike {
   width: 7.5%;
@@ -209,9 +190,7 @@ div>img {
   justify-content: center;
   align-items: center;
   gap: 5px;
-
 }
-
 .fa-xl:hover {
   cursor: pointer;
 }

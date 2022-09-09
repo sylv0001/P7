@@ -11,7 +11,7 @@ exports.createCom = (req, res, next) => {
   const com = new Com({
     ...comObject,
     userId: req.auth.userId,
-    imageUrl: req.file ? `${req.protocol}://${req.get('host')}/img/${req.file.filename}` : '',
+    imageUrl: req.fil ? `${req.protocol}://${req.get('host')}/img/${req.file.filename}` : '',
   });
 
   //Record Comments in DB
