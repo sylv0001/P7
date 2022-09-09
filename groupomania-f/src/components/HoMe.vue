@@ -120,6 +120,9 @@ export default {
           'Authorization': `Bearer ${sessionStorage.token}`,
         }
     })
+    .then((response) => {
+      this.coms = response.data
+    })
   }
   }
 }

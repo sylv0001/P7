@@ -63,20 +63,23 @@ exports.deleteCom = (req, res, next) => {
   //Find one select Comment
   Com.findOne({ _id: req.params.id }).then(
     (com) => {
+      //console.log(com)
       if (!com) {
+        console.log("je passe par if com")
         res.status(404).json({
           error: new Error('No such Comment!')
         });
       }
-      if (com.userId !== req.auth.userId) {
+      if (com.userId._id.toString() !== req.auth.userId) {
+        console.log("je passe par toString")
         res.status(400).json({
           error: new Error('Unauthorized request!')
         });
       }
 
       //Delete comment if exist just by creator user
-      Com.deleteOne({ _id: req.params.id }).then(
-        () => {
+      Com.deleteOne({ _id: req.params.id })
+      .then(() => {
           //Delete file from hard-disk
           const path = com.imageUrl.split('http://localhost:3000/')
           const fs = require('fs')
@@ -86,12 +89,17 @@ exports.deleteCom = (req, res, next) => {
               return
             }
           })
-          res.status(200).json({
-            message: 'Commentaire effacé!'
-          })
+          //res.status(200).json({ message: 'Commentaire effacé!' })
+          Com.find().find().populate('userId', 'name').then(
+            (coms) => {
+              res.status(200).json(coms);
+            }
+          )
         }
-      ).catch(
+      )
+      .catch(
         (error) => {
+          console.log("je passe par catch")
           res.status(400).json({
             error: error
           });
