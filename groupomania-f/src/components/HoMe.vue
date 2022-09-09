@@ -112,6 +112,15 @@ export default {
         }
         )
     },
+
+    //Delete Com
+    del(id) {
+    axios.delete('http://localhost:3000/api/coms/' + id, {
+      headers: {
+          'Authorization': `Bearer ${sessionStorage.token}`,
+        }
+    })
+  }
   }
 }
 </script>

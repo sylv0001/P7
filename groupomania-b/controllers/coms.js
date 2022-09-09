@@ -11,7 +11,7 @@ exports.createCom = (req, res, next) => {
   const com = new Com({
     ...comObject,
     userId: req.auth.userId,
-    imageUrl: req.fil ? `${req.protocol}://${req.get('host')}/img/${req.file.filename}` : '',
+    imageUrl: req.file ? `${req.protocol}://${req.get('host')}/img/${req.file.filename}` : '',
   });
 
   //Record Comments in DB
@@ -77,10 +77,6 @@ exports.deleteCom = (req, res, next) => {
       //Delete comment if exist just by creator user
       Com.deleteOne({ _id: req.params.id }).then(
         () => {
-          res.status(200).json({
-            message: 'Commentaire effacé!'
-          });
-
           //Delete file from hard-disk
           const path = com.imageUrl.split('http://localhost:3000/')
           const fs = require('fs')
@@ -89,6 +85,9 @@ exports.deleteCom = (req, res, next) => {
               console.error(err)
               return
             }
+          })
+          res.status(200).json({
+            message: 'Commentaire effacé!'
           })
         }
       ).catch(
