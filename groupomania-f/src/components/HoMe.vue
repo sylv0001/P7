@@ -70,9 +70,9 @@ export default {
   methods: {
     //like to like or reset like
     like(id) {
-      let likeObject ={}
+      let likeObject = {}
       //If the user is not in the usersLikes array -> + like
-      if(!this.userLik) {likeObject = { userId: sessionStorage.userId, like: 1 }}
+      if (!this.userLik) { likeObject = { userId: sessionStorage.userId, like: 1 } }
       //If the user is in the usersLikes array -> reset like
       else { likeObject = { userId: sessionStorage.userId, like: 0 } }
       axios.post('http://localhost:3000/api/coms/' + id + '/like', likeObject, {
@@ -92,9 +92,9 @@ export default {
     },
     //Dislike to dislike or reset dislike
     dislike(id) {
-      let dislikeObject ={}
+      let dislikeObject = {}
       //If the user is not in the usersDislikes array -> + dislike
-      if(!this.userDislik) {dislikeObject = { userId: sessionStorage.userId, like: -1 }}
+      if (!this.userDislik) { dislikeObject = { userId: sessionStorage.userId, like: -1 } }
       //If the user is in the usersDislikes array -> reset dislike
       else { dislikeObject = { userId: sessionStorage.userId, like: 0 } }
       axios.post('http://localhost:3000/api/coms/' + id + '/like', dislikeObject, {
@@ -115,15 +115,26 @@ export default {
 
     //Delete Com
     del(id) {
-    axios.delete('http://localhost:3000/api/coms/' + id, {
-      headers: {
-          'Authorization': `Bearer ${sessionStorage.token}`,
+      if (!this.coms) { //if no comment
+        return
+      }
+      this.coms.forEach(com => {
+        if (sessionStorage.userId !== com.userId._id) { //if user isn't creator of post
+          return
         }
-    })
-    .then((response) => {
-      this.coms = response.data
-    })
-  }
+        else {
+          axios.delete('http://localhost:3000/api/coms/' + id, {
+            headers: {
+              'Authorization': `Bearer ${sessionStorage.token}`,
+            }
+          })
+            .then((response) => {
+              this.coms = response.data
+            })
+        }
+      }
+      )
+    }
   }
 }
 </script>
@@ -134,9 +145,11 @@ export default {
   padding-bottom: 80px;
   overflow-y: auto;
 }
+
 h1 {
   text-align: center;
 }
+
 .commentaires {
   width: 90%;
   margin-left: auto;
@@ -145,6 +158,7 @@ h1 {
   flex-direction: row;
   justify-content: center;
 }
+
 .pseudo,
 .title,
 .image,
@@ -154,11 +168,13 @@ h1 {
   border: 1px solid #4E5166;
   text-align: center;
 }
+
 .pseudo {
   width: 10%;
   font-size: 20px;
   padding-top: 10px;
 }
+
 .title {
   width: 10%;
   height: 100px;
@@ -167,12 +183,15 @@ h1 {
   overflow-y: auto;
   hyphens: auto;
 }
+
 .image {
   width: 12%;
 }
+
 .blocImg {
   width: 100%;
 }
+
 .blocImg>img {
   width: 100px;
   height: 75px;
@@ -180,12 +199,15 @@ h1 {
   padding-top: 10px;
   padding-bottom: 10px;
 }
+
 .blocImg>img:hover {
   cursor: zoom-in;
 }
+
 div>img {
   cursor: zoom-out;
 }
+
 .commentaire {
   width: 53%;
   height: 100px;
@@ -193,6 +215,7 @@ div>img {
   padding: 10px;
   overflow-y: auto;
 }
+
 .like,
 .dislike {
   width: 7.5%;
@@ -203,6 +226,7 @@ div>img {
   align-items: center;
   gap: 5px;
 }
+
 .fa-xl:hover {
   cursor: pointer;
 }

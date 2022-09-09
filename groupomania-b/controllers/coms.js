@@ -63,23 +63,23 @@ exports.deleteCom = (req, res, next) => {
   //Find one select Comment
   Com.findOne({ _id: req.params.id }).then(
     (com) => {
-      //console.log(com)
-      if (!com) {
-        console.log("je passe par if com")
-        res.status(404).json({
-          error: new Error('No such Comment!')
-        });
-      }
-      if (com.userId._id.toString() !== req.auth.userId) {
-        console.log("je passe par toString")
-        res.status(400).json({
-          error: new Error('Unauthorized request!')
-        });
-      }
+ 
+      // if (!com) {
+      //   console.log("je passe par if com")
+      //   res.status(404).json({
+      //     error: new Error('No such Comment!')
+      //   });
+      // }
+      // if (com.userId._id.toString() !== req.auth.userId) {
+      //   console.log("je passe par toString")
+      //   res.status(400).json({
+      //     error: new Error('Unauthorized request!')
+      //   });
+      // }
 
       //Delete comment if exist just by creator user
       Com.deleteOne({ _id: req.params.id })
-      .then(() => {
+        .then(() => {
           //Delete file from hard-disk
           const path = com.imageUrl.split('http://localhost:3000/')
           const fs = require('fs')
@@ -89,22 +89,23 @@ exports.deleteCom = (req, res, next) => {
               return
             }
           })
-          //res.status(200).json({ message: 'Commentaire effacé!' })
-          Com.find().find().populate('userId', 'name').then(
+          //Recharge all coms
+          Com.find().find().populate('userId', 'name')
+          .then(
             (coms) => {
               res.status(200).json(coms);
             }
           )
         }
-      )
-      .catch(
-        (error) => {
-          console.log("je passe par catch")
-          res.status(400).json({
-            error: error
-          });
-        }
-      );
+        )
+        .catch(
+          (error) => {
+            console.log("je passe par catch")
+            res.status(400).json({
+              error: error
+            });
+          }
+        );
     }
   )
 };
@@ -176,56 +177,56 @@ exports.likeCom = (req, res, next) => {
     Com.findOne({ _id: req.params.id }).then(
       (com) => {
         if (!com.usersDisliked.includes(req.body.userId)) { // To allow just the "like" or "dislike" but not both
-        let numLikes = com.likes + 1;
-        //If user isn't in array "usersLiked", I incremente "Like" and add user in the array "usersLiked"
-        if (!com.usersLiked.includes(req.body.userId)) {
-          Com.updateOne({ _id: req.params.id }, { $inc: { likes: +1 }, $push: { usersLiked: req.body.userId } }
-          )
-            .then(() => res.status(200).json({ numLikes }))
-            .catch((error) => res.status(400).json({ error }));
+          let numLikes = com.likes + 1;
+          //If user isn't in array "usersLiked", I incremente "Like" and add user in the array "usersLiked"
+          if (!com.usersLiked.includes(req.body.userId)) {
+            Com.updateOne({ _id: req.params.id }, { $inc: { likes: +1 }, $push: { usersLiked: req.body.userId } }
+            )
+              .then(() => res.status(200).json({ numLikes }))
+              .catch((error) => res.status(400).json({ error }));
+          }
+          else {
+            //If user is in array usersLiked, I decremente "Like" and delete user in the array "usersLiked"
+            let numLikes = com.likes - 1;
+            Com.updateOne({ _id: req.params.id }, { $inc: { likes: -1 }, $pull: { usersLiked: req.body.userId } }
+            )
+              .then(() => res.status(200).json({ numLikes }))
+              .catch((error) => res.status(400).json({ error }));
+          }
         }
         else {
-          //If user is in array usersLiked, I decremente "Like" and delete user in the array "usersLiked"
-          let numLikes = com.likes - 1;
-          Com.updateOne({ _id: req.params.id }, { $inc: { likes: -1 }, $pull: { usersLiked: req.body.userId } }
-          )
-            .then(() => res.status(200).json({ numLikes }))
-            .catch((error) => res.status(400).json({ error }));
+          return
         }
-      }
-      else {
-        return
-      }
       })
-    
+
   }
 
-  
+
   ////////////If user add "like" to dislike or delete his dislike////////////
   if (req.body.like === -1) {
     Com.findOne({ _id: req.params.id }).then(
       (com) => {
         if (!com.usersLiked.includes(req.body.userId)) { // To allow just the "like" or "dislike" but not both
-        let numDislikes = com.dislikes + 1;
-        //If user isn't in array "usersDisliked", I incremente "Dislike" and add user in the array "usersDisliked"
-        if (!com.usersDisliked.includes(req.body.userId)) {
-          Com.updateOne({ _id: req.params.id }, { $inc: { dislikes: +1 }, $push: { usersDisliked: req.body.userId } }
-          )
-            .then(() => res.status(200).json({ numDislikes }))
-            .catch((error) => res.status(400).json({ error }));
+          let numDislikes = com.dislikes + 1;
+          //If user isn't in array "usersDisliked", I incremente "Dislike" and add user in the array "usersDisliked"
+          if (!com.usersDisliked.includes(req.body.userId)) {
+            Com.updateOne({ _id: req.params.id }, { $inc: { dislikes: +1 }, $push: { usersDisliked: req.body.userId } }
+            )
+              .then(() => res.status(200).json({ numDislikes }))
+              .catch((error) => res.status(400).json({ error }));
+          }
+          else {
+            //If user is in array usersDisliked, I decremente "Dislike" and delete user in the array "usersDisliked"
+            let numDislikes = com.dislikes - 1;
+            Com.updateOne({ _id: req.params.id }, { $inc: { dislikes: -1 }, $pull: { usersDisliked: req.body.userId } }
+            )
+              .then(() => res.status(200).json({ numDislikes }))
+              .catch((error) => res.status(400).json({ error }));
+          }
         }
         else {
-          //If user is in array usersDisliked, I decremente "Dislike" and delete user in the array "usersDisliked"
-          let numDislikes = com.dislikes - 1;
-          Com.updateOne({ _id: req.params.id }, { $inc: { dislikes: -1 }, $pull: { usersDisliked: req.body.userId } }
-          )
-            .then(() => res.status(200).json({ numDislikes }))
-            .catch((error) => res.status(400).json({ error }));
+          return
         }
-      }
-      else {
-        return
-      }
-    })
+      })
   }
 }
