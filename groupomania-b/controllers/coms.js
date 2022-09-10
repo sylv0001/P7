@@ -63,19 +63,21 @@ exports.deleteCom = (req, res, next) => {
   //Find one select Comment
   Com.findOne({ _id: req.params.id }).then(
     (com) => {
- 
-      // if (!com) {
-      //   console.log("je passe par if com")
-      //   res.status(404).json({
-      //     error: new Error('No such Comment!')
-      //   });
-      // }
-      // if (com.userId._id.toString() !== req.auth.userId) {
-      //   console.log("je passe par toString")
-      //   res.status(400).json({
-      //     error: new Error('Unauthorized request!')
-      //   });
-      // }
+      // if no comment exist
+      if (!com) {
+        console.log("je passe par if com")
+        res.status(404).json({
+          error: 'No such Comment!'
+        });
+      }
+
+      //If user is not the creator of post
+      if (com.userId._id.toString() !== req.auth.userId) {
+        console.log("je passe par toString")
+        res.status(403).json({
+          error: 'Unauthorized request!'
+        });
+      }
 
       //Delete comment if exist just by creator user
       Com.deleteOne({ _id: req.params.id })
@@ -91,11 +93,11 @@ exports.deleteCom = (req, res, next) => {
           })
           //Recharge all coms
           Com.find().find().populate('userId', 'name')
-          .then(
-            (coms) => {
-              res.status(200).json(coms);
-            }
-          )
+            .then(
+              (coms) => {
+                res.status(200).json(coms);
+              }
+            )
         }
         )
         .catch(
