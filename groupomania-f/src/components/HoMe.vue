@@ -42,7 +42,7 @@ export default {
     return {
       coms: [],
       imageUrl: '',
-      //user: false
+      id: ""
     }
   },
   created() {
@@ -135,9 +135,23 @@ export default {
       }
       )
     },
-    // modify(id) {
-      
-    // }
+
+    //Modify comment 
+     modify(id) {
+      this.coms.forEach(com => {
+        if (sessionStorage.userId !== com.userId._id) { //if user isn't creator of post
+          return
+        }
+        else {
+          localStorage.setItem("title", com.title)
+          localStorage.setItem("commentaire", com.commentaire)
+          localStorage.setItem("imageUrl", com.imageUrl)
+          location = ('http://localhost:3001/modify/')
+          return id
+        }
+      }
+      )
+     }
 
   }
 }

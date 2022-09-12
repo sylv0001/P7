@@ -4,6 +4,7 @@ import NewPass from '../views/NewPass.vue'
 import SignUp from '../views/SignUp.vue'
 import HoMe from '../views/HoMe.vue'
 import PoSt from '../views/PoSt.vue'
+import ModiFy from '../views/ModiFy.vue'
 
 const routes = [
   {
@@ -30,6 +31,11 @@ const routes = [
     path: '/post',
     name: 'post',
     component: PoSt
+  },
+  {
+    path: '/modify',
+    name: 'modify',
+    component: ModiFy
   },
 ]
 
