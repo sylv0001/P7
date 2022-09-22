@@ -32,6 +32,7 @@ exports.login = (req, res, next) => {
   //Find user
   User.findOne({ email: req.body.email })
     .then(user => {
+      
       if (!user) {
         return res.sendStatus(404);
       }
@@ -44,6 +45,7 @@ exports.login = (req, res, next) => {
           }
           res.status(200).json({
             userId: user._id,
+            isAdmin: user.admin,
             token: jwt.sign(
               { userId: user._id },
               //Get key used to crypt token

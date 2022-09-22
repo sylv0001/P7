@@ -2,6 +2,7 @@
 
 // Import model of coms
 const Com = require('../schemas/Com');
+const User = require('../schemas/User')
 
 //Create Comment
 exports.createCom = (req, res, next) => {
@@ -60,115 +61,127 @@ exports.getOneCom = (req, res, next) => {
 //Delete One Comment
 exports.deleteCom = (req, res, next) => {
 
-  //Find one select Comment
-  Com.findOne({ _id: req.params.id }).then(
-    (com) => {
+  //Find comment
+  Com.findOne({ _id: req.params.id })
+    .then((com) => {
       // if no comment exist
       if (!com) {
-        console.log("je passe par if com")
         res.status(404).json({
           error: 'No such Comment!'
         });
       }
 
-      //If user is not the creator of post
-      if (com.userId._id.toString() !== req.auth.userId) {
-        console.log("je passe par toString")
-        res.status(403).json({
-          error: 'Unauthorized request!'
-        });
-      }
+      User.findOne({ _id: req.auth.userId })
+        .then((user) => {
+          //If user logged is the creator of the post OR admin
+          if (com.userId._id.toString() === req.auth.userId || user.admin === true) {
 
-      //Delete comment if exist just by creator user
-      Com.deleteOne({ _id: req.params.id })
-        .then(() => {
-          //Delete file from hard-disk
-          const path = com.imageUrl.split('http://localhost:3000/')
-          const fs = require('fs')
-          fs.unlink(path[1], (err) => {
-            if (err) {
-              console.error(err)
-              return
-            }
-          })
-          //Recharge all coms
-          Com.find().find().populate('userId', 'name')
-            .then(
-              (coms) => {
-                res.status(200).json(coms);
+            Com.deleteOne({ _id: req.params.id })
+              .then(() => {
+                //Delete file from hard-disk
+                const path = com.imageUrl.split('http://localhost:3000/')
+                const fs = require('fs')
+                fs.unlink(path[1], (err) => {
+                  if (err) {
+                    console.error(err)
+                    return
+                  }
+                })
+                //Recharge all coms
+                Com.find().find().populate('userId', 'name')
+                  .then(
+                    (coms) => {
+                      res.status(200).json(coms);
+                    }
+                  )
               }
-            )
-        }
-        )
-        .catch(
-          (error) => {
-            console.log("je passe par catch")
-            res.status(400).json({
-              error: error
+              )
+              .catch(
+                (error) => {
+                  console.log("je passe par catch")
+                  res.status(400).json({
+                    error: error
+                  });
+                }
+              )
+          }
+          else {
+            res.status(403).json({
+              error: 'Unauthorized request!'
             });
           }
-        );
-    }
-  )
-};
+        }
+        )
+    })
+}
 
 //Modify One Comment
 exports.modifyCom = (req, res, next) => {
 
-  // if change image
-  if (req.file) {
+  Com.findOne({ _id: req.params.id })
+    .then((com) => {
+        User.findOne({ _id: req.auth.userId })
+          .then((user) => {
+            if (com.userId._id.toString() === req.auth.userId || user.admin === true) {
 
-    //Delete Old File on hard-disk
-    Com.findOne({ _id: req.params.id }).then(
-      (com) => {
-        const path = com.imageUrl.split('http://localhost:3000/')
-        const fs = require('fs')
-        fs.unlink(path[1], (err) => {
-          if (err) {
-            console.error(err)
-            return
-          }
-        })
-      }
-    );
+              if (req.file) {
+                //Delete Old File on hard-disk
+                // Com.findOne({ _id: req.params.id }).then(
+                //   (com) => {
+                const path = com.imageUrl.split('http://localhost:3000/')
+                const fs = require('fs')
+                fs.unlink(path[1], (err) => {
+                  if (err) {
+                    console.error(err)
+                    return
+                  }
+                })
+                //}
+                // );
 
-    //Update image
-    const parse = JSON.parse(req.body.com)
-    Com.updateOne({ _id: req.params.id }, { ...parse, imageUrl: `${req.protocol}://${req.get('host')}/img/${req.file.filename}`, _id: req.params.id })
-      .then(
-        () => {
-          res.status(201).json({
-            message: 'Commentaire modifié!'
-          });
-        }
-      ).catch(
-        (error) => {
-          res.status(400).json({
-            error: error
-          });
-        }
-      );
-  }
+                //Update image
+                Com.updateOne({ _id: req.params.id }, req.body ? { ...req.body, imageUrl: `${req.protocol}://${req.get('host')}/img/${req.file.filename}`, _id: req.params.id } : { imageUrl: `${req.protocol}://${req.get('host')}/img/${req.file.filename}`, _id: req.params.id })
+                  .then(() => {
+                    res.status(201).json({
+                      message: 'Commentaire modifié!'
+                    })
+                  }
+                  )
+                  .catch((error) => {
+                    res.status(400).json({
+                      error: error
+                    })
+                  }
+                  )
+              }
 
-  // if not change image
-  else {
-    Com.updateOne({ _id: req.params.id }, { ...req.body, _id: req.params.id })
-      .then(
-        () => {
-          res.status(201).json({
-            message: 'Commentaire modifié!'
-          });
-        }
-      ).catch(
-        (error) => {
-          res.status(400).json({
-            error: error
-          });
-        }
-      );
-  }
+              // if not change image
+              else {
+                Com.updateOne({ _id: req.params.id }, { ...req.body, _id: req.params.id })
+                  .then(() => {
+                      res.status(201).json({
+                        message: 'Commentaire modifié!'
+                      })
+                    }
+                  )
+                  .catch(
+                    (error) => {
+                      res.status(400).json({
+                        error: error
+                      });
+                    }
+                  )
+              }
+            }
 
-};
+            else {
+              res.status(403).json({
+                error: 'Unauthorized request!'
+              })
+            }
+          })
+      })
+}
 
 //////////////////////////Likes and Dislikes///////////////////////////
 

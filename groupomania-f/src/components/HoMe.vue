@@ -26,7 +26,8 @@
       </div>
       <div class="DeleteAndModify">
         <button @click="del(com._id)" type="button">Supprimer</button>
-        <button @click="modify(com._id)" type="button">Modifier</button>
+        <modifymodale :id="com._id" :title="com.title" :commentaire="com.commentaire" :imageUrl="com.imageUrl" :reveleModify="com.modify" @close-modale="com.modify = false"></modifymodale>
+        <button @click="com.modify = true" type="button">Modifier</button>
       </div>
     </div>
   </div>
@@ -36,15 +37,21 @@
 //import axios from "axios";
 import axios from "axios";
 import Modale from "./Modale";
+import ModifyModale from "./ModifyModale";
+
 export default {
   name: 'HoMe',
+  
   data() {
     return {
       coms: [],
       imageUrl: '',
-      id: ""
+      title: '',
+      commentaire: '',
+      id: '',
     }
   },
+
   created() {
     axios.get('http://localhost:3000/api/coms', {
       headers: {
@@ -53,76 +60,66 @@ export default {
     })
       .then(response => (
         this.coms = response.data,
-        console.log(response.data),
         this.coms.forEach(com => {
           com.revele = false
+          com.modify = false
           this.id = com._id
           this.userLik = com.usersLiked.includes(sessionStorage.userId)
           this.userDislik = com.usersDisliked.includes(sessionStorage.userId)
-          console.log(com.userId._id)
         })
       ))
       .catch(error => console.log(error))
   },
+
   components: {
-    modale: Modale
+    modale: Modale,
+    modifymodale: ModifyModale
   },
+
   methods: {
     //like to like or reset like
     like(id) {
-      let likeObject = {}
       //If the user is not in the usersLikes array -> + like
-      if (!this.userLik) { likeObject = { userId: sessionStorage.userId, like: 1 } }
+      if (!this.userLik) { this.sendLike(id, { userId: sessionStorage.userId, like: 1 }, true) }
       //If the user is in the usersLikes array -> reset like
-      else { likeObject = { userId: sessionStorage.userId, like: 0 } }
-      axios.post('http://localhost:3000/api/coms/' + id + '/like', likeObject, {
-        headers: {
-          'Authorization': `Bearer ${sessionStorage.token}`,
-        }
-      })
-        //Update number of likes in real time
-        .then(response => {
-          this.coms.forEach(com => {
-            if (id === com._id) {
-              { com.likes = response.data.numLikes }
-            }
-          })
-        }
-        )
+      else { this.sendLike(id, { userId: sessionStorage.userId, like: 0 }, true) }
     },
     //Dislike to dislike or reset dislike
     dislike(id) {
-      let dislikeObject = {}
       //If the user is not in the usersDislikes array -> + dislike
-      if (!this.userDislik) { dislikeObject = { userId: sessionStorage.userId, like: -1 } }
+      if (!this.userDislik) { this.sendLike(id, { userId: sessionStorage.userId, like: -1 }, false) }
       //If the user is in the usersDislikes array -> reset dislike
-      else { dislikeObject = { userId: sessionStorage.userId, like: 0 } }
-      axios.post('http://localhost:3000/api/coms/' + id + '/like', dislikeObject, {
+      else { this.sendLike(id, { userId: sessionStorage.userId, like: 0 }, false) }
+    },
+    sendLike(id, object, isLike) {
+      console.log(object)
+      axios.post('http://localhost:3000/api/coms/' + id + '/like', object, {
         headers: {
           'Authorization': `Bearer ${sessionStorage.token}`,
         }
       })
-        //Update number of dislikes in real time
-        .then(response => {
-          this.coms.forEach(com => {
-            if (id === com._id) {
-              com.dislikes = response.data.numDislikes
-            }
-          })
-        }
-        )
+          //Update number of dislikes in real time
+          .then(response => {
+                this.coms.forEach(com => {
+                  if (id === com._id) {
+                    if (isLike) {
+                      { com.likes = response.data.numLikes }
+                    } else {
+                      com.dislikes = response.data.numDislikes
+                    }
+                  }
+                })
+              }
+          )
     },
-
+    
     //Delete Com
     del(id) {
       if (!this.coms) { //if no comment
         return
       }
       this.coms.forEach(com => {
-        if (sessionStorage.userId !== com.userId._id) { //if user isn't creator of post
-          return
-        }
-        else {
+        if (sessionStorage.userId === com.userId._id || sessionStorage.isAdmin){
           axios.delete('http://localhost:3000/api/coms/' + id, {
             headers: {
               'Authorization': `Bearer ${sessionStorage.token}`,
@@ -130,31 +127,43 @@ export default {
           })
             .then((response) => {
               this.coms = response.data
-            })
+            })       
+        }
+        else {
+          return
         }
       }
       )
     },
-
     //Modify comment 
-     modify(id) {
-      this.coms.forEach(com => {
-        if (sessionStorage.userId !== com.userId._id) { //if user isn't creator of post
-          return
-        }
-        else {
-          localStorage.setItem("title", com.title)
-          localStorage.setItem("commentaire", com.commentaire)
-          localStorage.setItem("imageUrl", com.imageUrl)
-          location = ('http://localhost:3001/modify/')
-          return id
-        }
+    //  modify(id) {
+      
+    //   this.coms.forEach(com => {
+    //     if (sessionStorage.userId === com.userId._id || sessionStorage.isAdmin) {
+    //       localStorage.setItem("title", com.title),
+    //       localStorage.setItem("commentaire", com.commentaire),
+    //       localStorage.setItem("imageUrl", com.imageUrl),
+    //       location = ('http://localhost:3001/modify/')
+    //       return id
+    //       }
+    //     else {
+    //       return
+    //       }
+    //     })
+    //   }
+    //*************************************************************************** */
+        // if (sessionStorage.userId !== com.userId._id || sessionStorage.isAdmin === 'false') { //if user isn't creator of post
+        //   return
+        // }
+        // else if (sessionStorage.userId === com.userId._id || sessionStorage.isAdmin){
+        //   localStorage.setItem("title", com.title)
+        //   localStorage.setItem("commentaire", com.commentaire)
+        //   localStorage.setItem("imageUrl", com.imageUrl)
+        //   location = ('http://localhost:3001/modify/')
+        //   return id
+        // }
       }
-      )
-     }
-
-  }
-}
+    }
 </script>
 
 <style scoped>
@@ -163,11 +172,9 @@ export default {
   padding-bottom: 80px;
   overflow-y: auto;
 }
-
 h1 {
   text-align: center;
 }
-
 .commentaires {
   width: 90%;
   margin-left: auto;
@@ -176,7 +183,6 @@ h1 {
   flex-direction: row;
   justify-content: center;
 }
-
 .pseudo,
 .title,
 .image,
@@ -186,13 +192,11 @@ h1 {
   border: 1px solid #4E5166;
   text-align: center;
 }
-
 .pseudo {
   width: 10%;
   font-size: 20px;
   padding-top: 10px;
 }
-
 .title {
   width: 10%;
   height: 100px;
@@ -201,15 +205,12 @@ h1 {
   overflow-y: auto;
   hyphens: auto;
 }
-
 .image {
   width: 12%;
 }
-
 .blocImg {
   width: 100%;
 }
-
 .blocImg>img {
   width: 100px;
   height: 75px;
@@ -217,15 +218,12 @@ h1 {
   padding-top: 10px;
   padding-bottom: 10px;
 }
-
 .blocImg>img:hover {
   cursor: zoom-in;
 }
-
 div>img {
   cursor: zoom-out;
 }
-
 .commentaire {
   width: 53%;
   height: 100px;
@@ -233,7 +231,6 @@ div>img {
   padding: 10px;
   overflow-y: auto;
 }
-
 .like,
 .dislike {
   width: 7.5%;
@@ -244,11 +241,9 @@ div>img {
   align-items: center;
   gap: 5px;
 }
-
 .fa-xl:hover {
   cursor: pointer;
 }
-
 .DeleteAndModify {
   width: 7%;
   display: flex;

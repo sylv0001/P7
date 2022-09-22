@@ -5,6 +5,8 @@
 </template>
 
 <style>
+@import url('https://fonts.googleapis.com/css2?family=Lato&display=swap');
+
 body {
   margin: 0;
   background-color: #FFD7D7;
@@ -14,7 +16,7 @@ body {
   width: 100%;
   height: 100%;
   margin: 0;
-  font-family: Avenir, Helvetica, Arial, sans-serif;
+  font-family: Lato, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   color: #4E5166;

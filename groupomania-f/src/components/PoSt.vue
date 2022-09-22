@@ -46,7 +46,7 @@ export default {
 
             console.log(FormData)
 
-            //Connection a l'API et envoi des datas (input)
+            //Connection a l'API et update des datas (input/image)
             axios.post('http://localhost:3000/api/coms', formData, {
                 headers: {
                     'Authorization': `Bearer ${sessionStorage.token}`,
