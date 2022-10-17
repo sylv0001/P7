@@ -1,24 +1,24 @@
-<!-- **********Signup user page to import all necessary components********** -->
+<!-- **********Delete page to import all necessary components********** -->
 <template>
   <NavBar></NavBar>
   <LoGo></LoGo>
-  <SignUp></SignUp>
+  <Delete></Delete>
   <FooTer></FooTer>
   <router-view></router-view>
 </template>
-
+  
 <script>
 // @ is an alias to /src
 import NavBar from '@/components/NavBar.vue'
-import LoGo from '@/components/LoGo'
-import SignUp from '@/components/SignUp'
+import LoGo from '@/components/LoGo.vue'
+import Delete from '@/components/Delete.vue'
 import FooTer from '@/components/FooTer.vue'
 
 export default {
-    components: {
+  components: {
     NavBar,
     LoGo,
-    SignUp,
+    Delete,
     FooTer
   }
 }

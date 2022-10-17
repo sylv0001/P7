@@ -1,3 +1,4 @@
+<!-- **********Post comment********** -->
 <template>
     <div className='container'>
         <div className='form'>
@@ -5,13 +6,13 @@
             <form>
                 <label for="title">Titre : </label>
                 <input v-model="title" type="text" name="title" placeholder="Titre" />
-                <br />
+                
                 <label for="commentaire">Commentaire : </label>
                 <textarea v-model="commentaire" name="commentaire" placeholder="Votre commentaire"></textarea>
-                <br />
+                
                 <label for="imageUrl">Votre image : </label>
                 <input @change="handleFileUpload($event)" type="file" name="imageUrl" accept=".jpg, .jpeg, .png, .gif">
-                <br />
+                
                 <button @click="comment()" type="button" class="sent">Envoyer</button>
             </form>
         </div>
@@ -46,15 +47,14 @@ export default {
 
             console.log(FormData)
 
-            //Connection a l'API et update des datas (input/image)
+            //Connect to API et update datas (input/image)
             axios.post('http://localhost:3000/api/coms', formData, {
                 headers: {
                     'Authorization': `Bearer ${sessionStorage.token}`,
                 }
             })
-                .then(response => {
-                    console.log(response);
-                    location = "http://localhost:3001/home"
+                .then(() => {
+                    this.$router.push('/')
                 })
         }
     }
@@ -74,10 +74,6 @@ export default {
 
 h1 {
     margin-top: 10px;
-}
-
-a {
-    font-size: 16px;
 }
 
 .form {
@@ -119,5 +115,89 @@ textarea {
 
 .sent::after {
     background-color: #FD2D01;
+}
+
+/* Media Queries */
+@media (min-width: 501px) and (max-width: 576px) {
+    .form {
+        width: 450px;
+        height: 400px;
+    }
+
+    form {
+        font-size: 20px;
+    }
+
+    input {
+        font-size: 20px;
+    }
+
+    textarea {
+        font-size: 20px;
+    }
+
+    .sent {
+        font-size: 16px;
+    }
+}
+
+/* Media Queries */
+@media (min-width: 341px) and (max-width: 500px) {
+    .form {
+        width: 300px;
+        height: 320px;
+    }
+
+    h1 {
+        text-align: center;
+        font-size: 25px;
+    }
+
+    form {
+        font-size: 16px;
+    }
+
+    input {
+        font-size: 16px;
+    }
+
+    textarea {
+        font-size: 16px;
+    }
+
+    .sent {
+        margin-top: 0;
+        font-size: 15px;
+    }
+}
+
+/* Media Queries */
+@media (max-width: 340px) {
+    .form {
+        width: 250px;
+        height: 300px;
+    }
+
+    h1 {
+        text-align: center;
+        font-size: 20px;
+    }
+
+    form {
+        font-size: 14px;
+    }
+
+    input {
+        font-size: 14px;
+    }
+
+    textarea {
+        font-size: 14px;
+    }
+
+    .sent {
+        margin-top: 0;
+        font-size: 14px;
+    }
 }
 </style>

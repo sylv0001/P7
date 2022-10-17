@@ -1,3 +1,4 @@
+<!-- **********Navbar********** -->
 <template>
     <header>
         <div class="header">
@@ -7,22 +8,19 @@
             <nav>
                 <ul>
                     <li v-show="connect">
-                        <router-link to="/home">Accueil</router-link>
+                        <router-link to="/">Accueil</router-link>
                     </li>
                     <li v-show="connect">
                         <router-link to="/post">Poster</router-link>
                     </li>
                     <li v-show="connect">
-                        <span class="connect" @mouseenter="showsubmenu = true" :style="connect ? { 'background-color': '#DCFFC8' } : { 'background-color': '' }"></span>
+                        <router-link to="/login" @click="disconnect">Déconnexion</router-link>
                     </li>
-                    <ul class="submenu" v-show="showsubmenu" @mouseleave="showsubmenu = false">
-                        <li>
-                            <router-link to="/profil">Profil</router-link>
-                        </li>
-                        <li>
-                            <router-link to="/login" v-on:click="disconnect">Déconnexion</router-link>
-                        </li>
-                    </ul>
+                    <li v-show="connect">
+                        <router-link to="/delete" class="txt">Supprimer son compte</router-link>
+                        <router-link to="/delete" class="icon"><img src='../assets/images/userTrash.svg' />
+                        </router-link>
+                    </li>
                 </ul>
             </nav>
         </div>
@@ -36,8 +34,7 @@ export default {
     data() {
         if (sessionStorage.userId) {
             return {
-                connect: true,
-                showsubmenu: false
+                connect: true
             }
         }
         else {
@@ -53,23 +50,13 @@ export default {
         }
     }
 }
-
 </script>
 
 <style scoped>
-.submenu {
-    position:fixed;
-    display: flex;
-    flex-direction: column;
-}
-.submenu > li {
-    height: 35px;
-}
-
 header {
     padding: 0;
     background: #ffd7d7;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, .2);
+    box-shadow: 0 4px 6px rgba(78, 97, 102, .2);
 }
 
 .header {
@@ -124,7 +111,7 @@ nav a {
     text-decoration: none;
     display: block;
     position: relative;
-    color: #000;
+    color: #4E5166;
     text-transform: uppercase;
 }
 
@@ -135,7 +122,7 @@ nav a:after {
     position: absolute;
     left: 0;
     bottom: 15px;
-    background: #000;
+    background: #4E5166;
     transition: width .5s linear;
 }
 
@@ -143,10 +130,13 @@ nav a:hover:after {
     width: 100%;
 }
 
+.txt {
+    text-transform: none;
+}
+
 .connect {
     width: 30px;
     height: 30px;
-    margin-left: 25px;
     top: 10px;
     display: inline-block;
     position: relative;
@@ -154,19 +144,31 @@ nav a:hover:after {
     border-radius: 50%;
 }
 
-@media screen and (max-width: 660px) {
+.icon {
+    display: none;
+}
+
+/*Media Querie */
+@media (max-width: 770px) {
     header {
         text-align: center;
+        height: 105px;
     }
 
     .logo-box {
         float: none;
         display: inline-block;
-        margin: 0 0 16px 0;
+        margin: 0;
+    }
+
+    nav {
+        height: 50px;
+        line-height: 50px;
     }
 
     ul {
         float: none;
+        margin-top: -25px;
     }
 
     nav li:first-of-type {
@@ -174,24 +176,55 @@ nav a:hover:after {
     }
 }
 
+/*Media Querie */
 @media screen and (max-width: 550px) {
-    nav {
-        overflow: visible;
+    header {
+        height: 90px;
     }
 
-    nav li {
-        display: block;
-        margin: 0;
+    li a {
+        font-size: 14px;
+    }
+
+    .logo-box {
         height: 40px;
-        line-height: 40px;
     }
 
-    nav li:hover {
-        background: rgba(0, 0, 0, .1);
+    ul {
+        float: none;
+        margin-top: -5px;
+    }
+}
+
+/*Media Querie */
+@media screen and (max-width: 470px) {
+    nav li {
+        margin-left: 25px;
+    }
+    li a {
+        font-size: 12px;
     }
 
-    nav a:after {
-        content: none;
+    ul {
+        float: none;
+        margin-top: -8px;
+    }
+
+    .txt {
+        display: none;
+    }
+
+    .icon {
+        display: inline-block;
+        width: 30px;
+        height: 65px;
+    }
+
+}
+/*Media Querie */
+@media screen and (max-width: 350px) {
+    nav li {
+        margin-left: 15px;
     }
 }
 </style>

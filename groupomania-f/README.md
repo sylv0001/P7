@@ -1,45 +1,70 @@
-# groupomania-f
+*******Réseau social de l'entreprise Groupomania (Backend - Frontend)*******
+  
+ ## Technologies :
+ NodeJs, Vue.js v3 (vue-cli), Express, MongoDB.
+  
+ ## Dépendances :
+ ### Backend :
+ Bcrypt, Cors, Dotenv, Jsonwebtoken, Mongoose, Multer, Nodemon, password-validator.
+ ### Frontend :
+ Axios, Dotenv, Vue-Cli, Vue-router.
+ 
+ ## Installation et démarrage du serveur Backend:
+ 1) Clonez le projet https://github.com/sylv0001/P7
+ 2) Ouvrez un terminal
+ 3) Se placer dans le dossier "groupomania-b" (backend)
+ 4) Renommez le fichier .env.example en .env
+ 5) Saisissez votre propre clé de déchiffrement (MY_TOKEN) et votre propre lien d'accès à votre base de données MongoDB (MONGO_LOGIN)
+ 6) Saisissez les commandes suivantes (pour installer les dépendences) : 
+ > npm install
 
-## Project setup
-```
-npm install
-```
+ > nodemon server (démarrage du server back).
 
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
+ A la suite de cette dernière commande, vous devez avoir l'affichage de : 
+  Listening on port 3000
+  Connexion à MongoDB réussie !
 
-### Compiles and minifies for production
-```
-npm run build
-```
+NE FERMEZ PAS LE TERMINAL !
 
-### Lints and fixes files
-```
-npm run lint
-```
+ ## Installation et démarrage du serveur Frontend:
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+ 1) Ouvrez un nouveau terminal (sans fermer le premier (Backend)
+ 2) Se placer dans le dossier "groupomania-b" (backend)
+ 4) Saisissez les commandes suivantes (pour installer les dépendences) : 
+ > npm install
 
-NodeJs / Express / MongoDB /Muter/ Vue / 
+ > npm run serve (démarrage du server front).
 
-INSTALLATION
+A la suite de cette dernière commande, vous devez avoir l'affichage de : 
+   App running at:
+  - Local:   http://localhost:3001/
+  - Network: http://192.168.0.10:3001/
 
-Back-end : Mettez vos informations de cluster dans /config/db.js Créez le fichier .env dans /config/ ajouter les donner suivante :
+NE FERMEZ PAS LE TERMINAL !
 
-Backend : 
-PORT_BACKEND= 3001
-PORT_FRONT = 3000
+## Connexion au site:
+Ouvrez votre navigateur et rendez-vous à l'adresse "http://localhost:3001"
+Vous devez directement sur la page de login
+ 
+## Complément d'information importante:
+Pour se loguer en tant qu'administrateur, créer votre premier compte (administrateur) puis connectez-vous sur votre espace personnel MongoDb https://www.mongodb.com/, aller sur vos collections, cliquez sur users.
+Modifier la clé "admin" en "true" de votre utilisateur puis updatez pour valider votre changement.
 
-CLIENT_URL=http://localhost:3000/login
-DB_USER_PASS= Voir fichier .env
-TOKEN_SECRET= Voir Fichier .env
+Vous pouvez maintenant utiliser le site dans sa totalité:
+- Créer de compte
+- Modifier de votre password de connexion
+- Changer votre password de connexion perdu
+- Se connecter
+- Poster un nouveau commentaire avec ou sans image
+- Zoomer sur les images des commentaires déjà postés
+- Modifier vos propres commentaires (l'administrateur peut aussi le faire)
+- Supprimer vos propres commentaires (l'administrateur peut aussi le faire)
+- Supprimer votre compte personnel d'accès au site
+- Se déconnecter
 
-VUE_APP_API_URL=http://localhost:3001/ 
+Sources du projet : 
+https://course.oc-static.com/projects/DWJ_FR_P7/DW+P7+28-09-2022+Sce%CC%81nario.pdf
 
-DEMARRAGE (terminal):
-
-Depuis le dossier groupomania-f: npn run serve
-Depuis le dossier groupomania-f : nodemon server
+Cahier des charges:
+https://course.oc-static.com/projects/DWJ_FR_P7/Cahier+des+charges+Groupomania.pdf
+ 

@@ -1,3 +1,4 @@
+<!-- **********Login user page to import all necessary components********** -->
 <template>
   <NavBar></NavBar>
   <LoGo></LoGo>

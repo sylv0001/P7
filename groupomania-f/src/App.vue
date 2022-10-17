@@ -1,3 +1,4 @@
+<!-- **********GENERAL page to import all necessary components********** -->
 <template>
   <NavBar></NavBar>
   <router-view></router-view>
@@ -17,8 +18,6 @@ body {
   height: 100%;
   margin: 0;
   font-family: Lato, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
   color: #4E5166;
 }
 </style>

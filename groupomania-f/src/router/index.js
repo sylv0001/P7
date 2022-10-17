@@ -4,7 +4,8 @@ import NewPass from '../views/NewPass.vue'
 import SignUp from '../views/SignUp.vue'
 import HoMe from '../views/HoMe.vue'
 import PoSt from '../views/PoSt.vue'
-import ModiFy from '../views/ModiFy.vue'
+import NotFound from '../views/404.vue'
+import Delete from '../views/Delete.vue'
 
 const routes = [
   {
@@ -23,7 +24,7 @@ const routes = [
     component: NewPass
   },
   {
-    path: '/home',
+    path: '/',
     name: 'home',
     component: HoMe
   },
@@ -33,9 +34,12 @@ const routes = [
     component: PoSt
   },
   {
-    path: '/modify',
-    name: 'modify',
-    component: ModiFy
+    path: '/:pathMatch(.*)*',
+    component: NotFound
+  },
+  {
+    path: '/delete',
+    component: Delete
   },
 ]
 

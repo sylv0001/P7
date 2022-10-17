@@ -8,10 +8,10 @@ const User = require('../schemas/User')
 exports.createCom = (req, res, next) => {
   //Get all input in body 
   const comObject = req.body;
-
   const com = new Com({
     ...comObject,
     userId: req.auth.userId,
+    user: req.auth.userId,
     imageUrl: req.file ? `${req.protocol}://${req.get('host')}/img/${req.file.filename}` : '',
   });
 
@@ -25,17 +25,14 @@ exports.createCom = (req, res, next) => {
 exports.getAllCom = (req, res, next) => {
 
   //Find all Comments to screen
-  Com.find().find().populate('userId', 'name').then(
+  Com.find().populate('user', 'name').then(
     (coms) => {
       res.status(200).json(coms);
+    })
+    .catch((error) => {
+      res.status(400).json({ error: error });
     }
-  ).catch(
-    (error) => {
-      res.status(400).json({
-        error: error
-      });
-    }
-  );
+    );
 };
 
 //Screen One Comment
@@ -55,7 +52,6 @@ exports.getOneCom = (req, res, next) => {
       });
     }
   );
-
 };
 
 //Delete One Comment
@@ -74,8 +70,7 @@ exports.deleteCom = (req, res, next) => {
       User.findOne({ _id: req.auth.userId })
         .then((user) => {
           //If user logged is the creator of the post OR admin
-          if (com.userId._id.toString() === req.auth.userId || user.admin === true) {
-
+          if (com.userId != null && com.userId.toString() === req.auth.userId || user.admin === true) {
             Com.deleteOne({ _id: req.params.id })
               .then(() => {
                 //Delete file from hard-disk
@@ -88,7 +83,7 @@ exports.deleteCom = (req, res, next) => {
                   }
                 })
                 //Recharge all coms
-                Com.find().find().populate('userId', 'name')
+                Com.find().populate('user', 'name')
                   .then(
                     (coms) => {
                       res.status(200).json(coms);
@@ -120,67 +115,74 @@ exports.modifyCom = (req, res, next) => {
 
   Com.findOne({ _id: req.params.id })
     .then((com) => {
-        User.findOne({ _id: req.auth.userId })
-          .then((user) => {
-            if (com.userId._id.toString() === req.auth.userId || user.admin === true) {
+      User.findOne({ _id: req.auth.userId })
+        .then((user) => {
+          if (com.userId != null && com.userId.toString() === req.auth.userId || user.admin === true) {
 
-              if (req.file) {
-                //Delete Old File on hard-disk
-                // Com.findOne({ _id: req.params.id }).then(
-                //   (com) => {
-                const path = com.imageUrl.split('http://localhost:3000/')
-                const fs = require('fs')
-                fs.unlink(path[1], (err) => {
-                  if (err) {
-                    console.error(err)
-                    return
-                  }
-                })
-                //}
-                // );
+            if (req.file) {
+              //Delete Old File on hard-disk
+              const path = com.imageUrl.split('http://localhost:3000/')
+              const fs = require('fs')
+              fs.unlink(path[1], (err) => {
+                if (err) {
+                  console.error(err)
+                  return
+                }
+              })
 
-                //Update image
-                Com.updateOne({ _id: req.params.id }, req.body ? { ...req.body, imageUrl: `${req.protocol}://${req.get('host')}/img/${req.file.filename}`, _id: req.params.id } : { imageUrl: `${req.protocol}://${req.get('host')}/img/${req.file.filename}`, _id: req.params.id })
-                  .then(() => {
+              //Update image
+              Com.updateOne({ _id: req.params.id }, req.body ? { ...req.body, imageUrl: `${req.protocol}://${req.get('host')}/img/${req.file.filename}`, _id: req.params.id } : { imageUrl: `${req.protocol}://${req.get('host')}/img/${req.file.filename}`, _id: req.params.id })
+                .then(() => {
+                  Com.findOne({
+                    _id: req.params.id
+                  }).then((com) => {
                     res.status(201).json({
-                      message: 'Commentaire modifié!'
-                    })
+                      com
+                    });
                   }
                   )
-                  .catch((error) => {
+                }
+                )
+                .catch((error) => {
+                  res.status(400).json({
+                    error: error
+                  })
+                }
+                )
+            }
+
+            // if not change image
+            else {
+              Com.updateOne({ _id: req.params.id }, { ...req.body, _id: req.params.id })
+                .then((com) => {
+                  Com.findOne({
+                    _id: req.params.id
+                  }).then((com) => {
+                    res.status(201).json({
+                      com
+                    });
+                  }
+                  )
+                }
+                )
+                .catch(
+                  (error) => {
                     res.status(400).json({
                       error: error
-                    })
+                    });
                   }
-                  )
-              }
-
-              // if not change image
-              else {
-                Com.updateOne({ _id: req.params.id }, { ...req.body, _id: req.params.id })
-                  .then(() => {
-                      res.status(201).json({
-                        message: 'Commentaire modifié!'
-                      })
-                    }
-                  )
-                  .catch(
-                    (error) => {
-                      res.status(400).json({
-                        error: error
-                      });
-                    }
-                  )
-              }
+                )
             }
+          }
 
-            else {
-              res.status(403).json({
-                error: 'Unauthorized request!'
-              })
-            }
-          })
-      })
+
+          else {
+            res.status(403).json({
+              error: 'Unauthorized request!'
+            })
+          }
+        })
+    })
 }
 
 //////////////////////////Likes and Dislikes///////////////////////////

@@ -1,3 +1,4 @@
+<!-- **********Footer********** -->
 <template>
     <footer>
         <div className="copyright">
@@ -23,10 +24,12 @@ footer {
 }
 
 p {
-    margin-bottom: 10px;
+    margin-top: auto;
+    margin-bottom: auto;
 }
+
 .copyright {
-    margin-top: 20px;
+    margin-top: 10px;
     text-align: center;
 }
 </style>

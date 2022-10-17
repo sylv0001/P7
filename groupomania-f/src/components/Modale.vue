@@ -1,3 +1,4 @@
+<!-- **********Modale image********** -->
 <template>
     <div class="bloc-modale" v-if="revele">
         <div class="overlay" @click="toggleModale"></div>
@@ -12,11 +13,11 @@
 
 export default {
     name: "Modale",
+    //Variable from parent to children
     props: ["revele", "imageUrl"],
 };
 
 </script>
-
 
 <style scoped>
 .bloc-modale {
@@ -61,5 +62,62 @@ export default {
 .btn-danger:hover {
     background-color: red;
     cursor: default;
+}
+
+#modal {
+    max-width: 800px;
+    max-height: 600px;
+}
+
+/* Media Queries */
+@media (max-width: 992px) {
+    .modale {
+        width: 600px;
+        height: 400px;
+    }
+
+    #modal {
+        width: 600px;
+        height: 400px;
+    }
+}
+
+/* Media Queries */
+@media (max-width: 768px) {
+    .modale {
+        width: 400px;
+        height: 280px;
+    }
+
+    #modal {
+        width: 400px;
+        height: 280px;
+    }
+}
+
+/* Media Queries */
+@media (max-width: 576px) {
+    .modale {
+        width: 300px;
+        height: 200px;
+    }
+
+    #modal {
+        width: 300px;
+        height: 200px;
+    }
+}
+
+/* Media Queries */
+@media (max-width: 450px) {
+    .modale {
+        width: 230px;
+        height: 170px;
+    }
+
+    #modal {
+        width: 230px;
+        height: 170px;
+    }
 }
 </style>

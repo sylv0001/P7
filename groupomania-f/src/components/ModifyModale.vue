@@ -1,9 +1,13 @@
+<!-- **********Modale to modify comment********** -->
 <template>
-    <!-- <div class="bloc-modale" v-if="reveleModify"> -->
     <div className='container' v-if="reveleModify">
         <div class="overlay">
             <div className='form'>
-                <h1>Commentaire</h1>
+                <div class="close">
+                    <h1>Commentaire</h1>
+                    <img src='../assets/images/closed.png' class="btn-modale btn btn-danger"
+                        @click="$emit('close-modale')">
+                </div>
                 <form>
                     <div class="blocFlex">
                         <div class="img">
@@ -14,14 +18,16 @@
                             <input :value="title" :title="title" type="text" name="title" ref="modifTitle" />
 
                             <label for="commentaire">Commentaire : </label>
-                            <textarea :value="commentaire" :commentaire="commentaire" name="commentaire" ref="modifCommentaire"></textarea>
+                            <textarea :value="commentaire" :commentaire="commentaire" name="commentaire"
+                                ref="modifCommentaire"></textarea>
                         </div>
                     </div>
-                    <label for="imageUrl">Votre image : </label>
-                    <input @change="handleFileUpload($event)" type="file" name="imageUrl"
-                        accept=".jpg, .jpeg, .png, .gif">
-                    <button @click="modify(this.id)" type="button" class="sent">Envoyer</button>
-
+                    <div class="changeImg">
+                        <label for="imageUrl">Votre image : </label>
+                        <input @change="handleFileUpload($event)" type="file" name="imageUrl"
+                            accept=".jpg, .jpeg, .png, .gif">
+                    </div>
+                    <button @click="modify(this.id), $emit('close-modale')" type="button" class="sent">Valider</button>
                 </form>
             </div>
         </div>
@@ -33,7 +39,7 @@ import axios from "axios";
 
 export default {
     name: "ModifyModale",
-
+    //Variable from parent to children
     props: ["reveleModify", "id", "title", "commentaire", "imageUrl"],
 
     methods: {
@@ -47,21 +53,18 @@ export default {
             formData.set('commentaire', this.$refs.modifCommentaire.value)
             formData.append('image', this.file)
             console.log(FormData)
-            //Connection a l'API et envoi des datas (input)
+
+            //Connection  to API et send datas (input)
             axios.put('http://localhost:3000/api/coms/' + id, formData, {
                 headers: {
                     'Authorization': `Bearer ${sessionStorage.token}`,
                 }
             })
-                .then(response => {
-                    console.log(response);
-                    console.log(this.title)
-                    console.log(this.file)
-                    location = ('http://localhost:3001/home')
+                .then((response) => {
+                    this.$emit('modif', response.data.com)
                 })
-        }
+        },
     }
-
 }
 </script>
 
@@ -78,7 +81,7 @@ export default {
 }
 
 .overlay {
-    background: rgba(255, 215, 215, 0.2);
+    background: rgba(255, 215, 215, 0.5);
     position: fixed;
     top: 0;
     bottom: 0;
@@ -100,7 +103,7 @@ a {
 
 .form {
     width: 600px;
-    height: 470px;
+    height: 450px;
     background-color: #FFF;
     display: flex;
     flex-direction: column;
@@ -115,6 +118,22 @@ form {
     flex-direction: column;
     align-items: center;
     gap: 20px;
+}
+
+.close {
+    width: 600px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    /* align-items: baseline; */
+    gap: 50px;
+}
+
+.close img {
+    width: 25px;
+    position: absolute;
+    margin-top: 10px;
+    margin-left: 550px;
 }
 
 .blocFlex {
@@ -132,6 +151,7 @@ form {
 
 .img {
     width: 130px;
+    max-height: 210px;
     display: flex;
     flex-direction: row;
     justify-content: center;
@@ -162,7 +182,147 @@ textarea {
     background-color: #ffd7d7;
 }
 
-.sent::after {
-    background-color: #FD2D01;
+.form>img {
+    width: 10px;
+    height: 10px;
+    float: right;
+}
+
+.btn-danger:hover {
+    background-color: red;
+    cursor: default;
+}
+
+.changeImg {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-size: 25px;
+    gap: 10px;
+}
+
+/* Media Queries */
+@media (max-width: 750px) {
+    .form {
+        width: 500px;
+        height: 420px;
+    }
+
+    .img {
+        width: 100px;
+        max-height: 210px;
+    }
+
+    h1 {
+        font-size: 26px;
+    }
+
+    .close img {
+        width: 25px;
+        margin-top: 10px;
+        margin-left: 450px;
+    }
+
+    .blocFlex {
+        justify-content: space-evenly;
+    }
+
+    .blocInputs {
+        font-size: 22px;
+    }
+
+    .blocInputs input {
+        font-size: 22px;
+    }
+
+    .blocInputs textarea {
+        font-size: 22px;
+    }
+
+    .changeImg {
+        font-size: 22px;
+    }
+
+    .changeImg input {
+        font-size: 22px;
+    }
+}
+
+/* Media Queries */
+@media (max-width: 600px) {
+    .form {
+        width: 400px;
+        height: 380px;
+    }
+
+    .img {
+        width: 100px;
+        max-height: 210px;
+    }
+
+    h1 {
+        font-size: 22px;
+    }
+
+    .close img {
+        width: 25px;
+        margin-top: 10px;
+        margin-left: 350px;
+    }
+
+    .blocFlex {
+        justify-content: space-evenly;
+    }
+
+    .blocInputs {
+        font-size: 18px;
+    }
+
+    .blocInputs input {
+        font-size: 18px;
+    }
+
+    .blocInputs textarea {
+        font-size: 18px;
+    }
+
+    .changeImg {
+        font-size: 18px;
+    }
+
+    .changeImg input {
+        font-size: 18px;
+    }
+}
+
+/* Media Queries */
+@media (max-width: 450px) {
+    .form {
+        width: 300px;
+        height: 350px;
+    }
+
+    .close img {
+        margin-left: 250px;
+    }
+
+    .img {
+        width: 100px;
+        max-height: 210px;
+    }
+
+    .blocFlex {
+        width: 280px;
+        gap: 20px;
+    }
+
+    .changeImg input {
+        font-size: 16px;
+    }
+
+    .sent {
+        margin-top: 0;
+        font-size: 16px;
+    }
 }
 </style>

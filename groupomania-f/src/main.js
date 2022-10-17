@@ -1,3 +1,4 @@
+// **********Import all necessary libraries********** 
 import { createApp } from 'vue'
 import App from './App.vue'
 import router from './router'
@@ -11,6 +12,7 @@ import { far } from '@fortawesome/free-regular-svg-icons';
 library.add(far)
 import { dom } from "@fortawesome/fontawesome-svg-core";
 dom.watch()
+
 
 const app = createApp(App);
 app.component("font-awesome-icon", FontAwesomeIcon);

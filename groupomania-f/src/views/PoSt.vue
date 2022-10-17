@@ -1,3 +1,4 @@
+<!-- **********Post comment page to import all necessary components********** -->
 <template>
   <NavBar></NavBar>
   <LoGo></LoGo>

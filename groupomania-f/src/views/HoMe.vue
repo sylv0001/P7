@@ -1,3 +1,4 @@
+<!-- **********Home page to import all necessary components********** -->
 <template>
   <NavBar></NavBar>
   <HoMe></HoMe>
