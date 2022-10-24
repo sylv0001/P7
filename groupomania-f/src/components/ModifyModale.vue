@@ -27,7 +27,12 @@
                         <input @change="handleFileUpload($event)" type="file" name="imageUrl"
                             accept=".jpg, .jpeg, .png, .gif">
                     </div>
-                    <button @click="modify(this.id), $emit('close-modale')" type="button" class="sent">Valider</button>
+                    <div class="buttons">
+                        <button @click="modify(this.id), $emit('close-modale')" type="button"
+                            class="sent">Valider</button>
+                        <button @click="del(this.id), $emit('close-modale')" type="button" class="sent">Supprimer
+                            l'image</button>
+                    </div>
                 </form>
             </div>
         </div>
@@ -47,13 +52,14 @@ export default {
             this.file = event.target.files[0];
         },
 
+        // Modify comment
         modify(id) {
             const formData = new FormData()
             formData.set('title', this.$refs.modifTitle.value)
             formData.set('commentaire', this.$refs.modifCommentaire.value)
-            formData.append('image', this.file)
-            console.log(FormData)
-
+            if (this.file) {
+                formData.append('image', this.file)
+            }
             //Connection  to API et send datas (input)
             axios.put('http://localhost:3000/api/coms/' + id, formData, {
                 headers: {
@@ -64,6 +70,19 @@ export default {
                     this.$emit('modif', response.data.com)
                 })
         },
+
+        //Delete image
+        del(id) {
+            //Connection to API to update comment without image
+            axios.put('http://localhost:3000/api/coms/' + id + '/delImage', {}, {
+                headers: {
+                    'Authorization': `Bearer ${sessionStorage.token}`,
+                }
+            })
+                .then((response) => {
+                    this.$emit('delete', response.data.com)
+                })
+        }
     }
 }
 </script>
@@ -170,6 +189,13 @@ input {
 
 textarea {
     font-size: 25px;
+}
+
+.buttons {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    gap: 80px;
 }
 
 .sent {

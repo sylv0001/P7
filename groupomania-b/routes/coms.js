@@ -17,6 +17,7 @@ router.get('/', auth, comsCtrl.getAllCom);
 router.get('/:id', auth, comsCtrl.getOneCom);
 router.put('/:id', auth, multer, comsCtrl.modifyCom);
 router.delete('/:id', auth, comsCtrl.deleteCom);
+router.put('/:id/delImage', auth, comsCtrl.delImage);
 
 //Routes Likes and Dislikes
 router.post('/:id/like', auth, comsCtrl.likeCom);

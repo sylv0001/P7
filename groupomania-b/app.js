@@ -5,6 +5,7 @@ const comsRoutes = require('./routes/coms');
 const userRoutes = require('./routes/user');
 const dotenv = require('dotenv');
 const resul = dotenv.config();
+const fs = require('fs');
 
 //Connect to DB
 mongoose.connect(`mongodb+srv://${process.env.MONGO_LOGIN}`,

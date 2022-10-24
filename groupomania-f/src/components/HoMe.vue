@@ -31,7 +31,7 @@
           @click="del(com._id)" />
         <modifymodale :id="com._id" :title="com.title" :commentaire="com.commentaire" :imageUrl="com.imageUrl"
           :reveleModify="com.modify" @close-modale="com.modify = false"
-          @modif="(newValues) =>{modifyCom(newValues, com)}"></modifymodale>
+          @modif="(newValues) =>{modifyCom(newValues, com), delImage(com)}"></modifymodale>
         <button v-if="isAdmin === 'true' || isCreator === com.userId" @click="com.modify = true"
           type="button">Modifier</button>
         <img src='../assets/images/modif.svg' v-if="isAdmin === 'true' || isCreator === com.userId"
@@ -144,6 +144,11 @@ export default {
       com.title = comModif.title
       com.commentaire = comModif.commentaire
       com.imageUrl = comModif.imageUrl
+    },
+
+    //delete image
+    delImage(com) {
+      com.imageUrl = ''
     }
   },
 

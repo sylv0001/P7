@@ -73,15 +73,17 @@ exports.deleteCom = (req, res, next) => {
           if (com.userId != null && com.userId.toString() === req.auth.userId || user.admin === true) {
             Com.deleteOne({ _id: req.params.id })
               .then(() => {
-                //Delete file from hard-disk
-                const path = com.imageUrl.split('http://localhost:3000/')
-                const fs = require('fs')
-                fs.unlink(path[1], (err) => {
-                  if (err) {
-                    console.error(err)
-                    return
-                  }
-                })
+                if (com.imageUrl != null) {
+                  //Delete file from hard-disk
+                  const path = com.imageUrl.split('http://localhost:3000/')
+                  const fs = require('fs')
+                  fs.unlink(path[1], (err) => {
+                    if (err) {
+                      console.error(err)
+                      return
+                    }
+                  })
+                }
                 //Recharge all coms
                 Com.find().populate('user', 'name')
                   .then(
@@ -108,19 +110,19 @@ exports.deleteCom = (req, res, next) => {
         }
         )
     })
-}
+};
 
 //Modify One Comment
 exports.modifyCom = (req, res, next) => {
-
+  console.log(req.body)
   Com.findOne({ _id: req.params.id })
     .then((com) => {
       User.findOne({ _id: req.auth.userId })
         .then((user) => {
           if (com.userId != null && com.userId.toString() === req.auth.userId || user.admin === true) {
 
+            //Delete Old File on hard-disk
             if (req.file) {
-              //Delete Old File on hard-disk
               const path = com.imageUrl.split('http://localhost:3000/')
               const fs = require('fs')
               fs.unlink(path[1], (err) => {
@@ -135,7 +137,8 @@ exports.modifyCom = (req, res, next) => {
                 .then(() => {
                   Com.findOne({
                     _id: req.params.id
-                  }).then((com) => {
+                  })
+                  .then((com) => {
                     res.status(201).json({
                       com
                     });
@@ -154,7 +157,7 @@ exports.modifyCom = (req, res, next) => {
             // if not change image
             else {
               Com.updateOne({ _id: req.params.id }, { ...req.body, _id: req.params.id })
-                .then((com) => {
+                .then(() => {
                   Com.findOne({
                     _id: req.params.id
                   }).then((com) => {
@@ -175,7 +178,6 @@ exports.modifyCom = (req, res, next) => {
             }
           }
 
-
           else {
             res.status(403).json({
               error: 'Unauthorized request!'
@@ -183,8 +185,39 @@ exports.modifyCom = (req, res, next) => {
           }
         })
     })
-}
+};
 
+//delete image
+exports.delImage = (req, res, next) => {
+  Com.findOne({ _id: req.params.id })
+    .then((com) => {
+      //Delete File on hard-disk
+      const path = com.imageUrl.split('http://localhost:3000/')
+      const fs = require('fs')
+      fs.unlink(path[1], (err) => {
+        if (err) {
+          console.error(err)
+          return
+        }
+      })
+
+      //Update com without imageUrl (null)
+      Com.updateOne({ _id: req.params.id }, { imageUrl: null })
+        .then(() => {
+          Com.findOne({
+            _id: req.params.id
+          }).then((com) => {
+            res.status(201).json({ com });
+          }
+          )
+        }
+        )
+        .catch((error) => {
+          res.status(400).json({ error: error })
+        }
+        )
+    })
+}
 //////////////////////////Likes and Dislikes///////////////////////////
 
 exports.likeCom = (req, res, next) => {
