@@ -44,7 +44,7 @@ import axios from "axios";
 
 export default {
     name: "ModifyModale",
-    //Variable from parent to children
+    //Variables from parent to children
     props: ["reveleModify", "id", "title", "commentaire", "imageUrl"],
 
     methods: {
@@ -86,7 +86,6 @@ export default {
     }
 }
 </script>
-
 
 <style scoped>
 .container {

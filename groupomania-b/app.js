@@ -26,7 +26,7 @@ app.use((req, res, next) => {
   next();
 });
 
-//Roads
+//All Roads
 app.use(express.json());
 app.use('/img', express.static(path.join(__dirname, 'img')));
 app.use('/api/coms', comsRoutes);

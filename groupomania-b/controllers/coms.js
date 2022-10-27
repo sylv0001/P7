@@ -67,41 +67,42 @@ exports.deleteCom = (req, res, next) => {
         });
       }
 
+      //Find user logged
       User.findOne({ _id: req.auth.userId })
         .then((user) => {
           //If user logged is the creator of the post OR admin
           if (com.userId != null && com.userId.toString() === req.auth.userId || user.admin === true) {
-            Com.deleteOne({ _id: req.params.id })
-              .then(() => {
-                if (com.imageUrl != null) {
-                  //Delete file from hard-disk
+            //if image exist    
+            if (com.imageUrl != '') {
                   const path = com.imageUrl.split('http://localhost:3000/')
                   const fs = require('fs')
-                  fs.unlink(path[1], (err) => {
-                    if (err) {
-                      console.error(err)
-                      return
+              //Delete image on backend folder
+              fs.unlink(path[1], () => {
+                Com.deleteOne({ _id: req.params.id })
+                  .then(() => {
+                    res.status(200).json({ message: 'Commentaire supprimé !' })
+                  })
+                  .catch((error) => {
+                    res.status(400).json({ error: error });
                     }
+                  );
                   })
                 }
-                //Recharge all coms
-                Com.find().populate('user', 'name')
-                  .then(
-                    (coms) => {
-                      res.status(200).json(coms);
+
+            //if image not exist
+            else {
+              Com.deleteOne({ _id: req.params.id })
+                .then(() => {
+                  res.status(200).json({ message: 'Commentaire supprimé !' })
+                })
+                .catch((error) => {
+                  res.status(400).json({ error: error });
                     }
-                  )
+                );
               }
-              )
-              .catch(
-                (error) => {
-                  console.log("je passe par catch")
-                  res.status(400).json({
-                    error: error
-                  });
                 }
-              )
-          }
+
+          //if user is not the creator of comment or not admin
           else {
             res.status(403).json({
               error: 'Unauthorized request!'
@@ -123,6 +124,7 @@ exports.modifyCom = (req, res, next) => {
 
             //Delete Old File on hard-disk
             if (req.file) {
+
               const path = com.imageUrl.split('http://localhost:3000/')
               const fs = require('fs')
               fs.unlink(path[1], (err) => {
@@ -202,7 +204,7 @@ exports.delImage = (req, res, next) => {
       })
 
       //Update com without imageUrl (null)
-      Com.updateOne({ _id: req.params.id }, { imageUrl: null })
+      Com.updateOne({ _id: req.params.id }, { imageUrl: '', _id: req.params.id })
         .then(() => {
           Com.findOne({
             _id: req.params.id

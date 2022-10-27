@@ -31,7 +31,7 @@
           @click="del(com._id)" />
         <modifymodale :id="com._id" :title="com.title" :commentaire="com.commentaire" :imageUrl="com.imageUrl"
           :reveleModify="com.modify" @close-modale="com.modify = false"
-          @modif="(newValues) =>{modifyCom(newValues, com), delImage(com)}"></modifymodale>
+          @modif="(newValues) => { modifyCom(newValues, com) }" @delete="() => { delImage(com) }"></modifymodale>
         <button v-if="isAdmin === 'true' || isCreator === com.userId" @click="com.modify = true"
           type="button">Modifier</button>
         <img src='../assets/images/modif.svg' v-if="isAdmin === 'true' || isCreator === com.userId"
@@ -61,7 +61,7 @@ export default {
     }
   },
 
-  //Function launched at page start
+  //Function launched at page start to get all comments
   created() {
     axios.get('http://localhost:3000/api/coms', {
       headers: {
@@ -87,6 +87,14 @@ export default {
   components: {
     modale: Modale,
     modifymodale: ModifyModale
+  },
+  
+// Watch if items of array coms (comments) change to update them
+  watch: {
+    coms(newValue, oldValue) {
+      this.coms = newValue
+      console.log(oldValue)
+    }
   },
 
   methods: {
@@ -135,7 +143,15 @@ export default {
         }
       })
         .then((response) => {
+          console.log(response)
+          axios.get('http://localhost:3000/api/coms', {
+            headers: {
+              'Authorization': `Bearer ${sessionStorage.token}`,
+            }
+          })
+            .then(response => (
           this.coms = response.data
+            ))
         })
     },
 

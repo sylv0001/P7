@@ -19,7 +19,7 @@ router.put('/:id', auth, multer, comsCtrl.modifyCom);
 router.delete('/:id', auth, comsCtrl.deleteCom);
 router.put('/:id/delImage', auth, comsCtrl.delImage);
 
-//Routes Likes and Dislikes
+//Routes to Likes and Dislikes
 router.post('/:id/like', auth, comsCtrl.likeCom);
 //Router export
 module.exports = router;
