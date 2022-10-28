@@ -39,13 +39,11 @@ export default {
         },
 
         comment() {
+            //Create object to send with all datas (input)
             const formData = new FormData()
-
             formData.append('title', this.title)
             formData.append('commentaire', this.commentaire)
             formData.append('image', this.file)
-
-            console.log(FormData)
 
             //Connect to API et update datas (input/image)
             axios.post('http://localhost:3000/api/coms', formData, {

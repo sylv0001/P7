@@ -73,7 +73,6 @@ export default {
         this.coms.forEach(com => {
           com.revele = false
           com.modify = false
-          console.log(response.data);
           if (com.user === null) { com.user = { name: "Compte supprimé" } }
           this.id = com._id
           this.userLik = com.usersLiked.includes(sessionStorage.userId)
@@ -88,8 +87,8 @@ export default {
     modale: Modale,
     modifymodale: ModifyModale
   },
-  
-// Watch if items of array coms (comments) change to update them
+
+  // Watch if items of array coms (comments) change to update them
   watch: {
     coms(newValue, oldValue) {
       this.coms = newValue
@@ -114,7 +113,6 @@ export default {
     },
     //request to like, dislike or delete this one
     sendLike(id, object, isLike) {
-      console.log(object)
       axios.post('http://localhost:3000/api/coms/' + id + '/like', object, {
         headers: {
           'Authorization': `Bearer ${sessionStorage.token}`,
@@ -143,14 +141,13 @@ export default {
         }
       })
         .then((response) => {
-          console.log(response)
           axios.get('http://localhost:3000/api/coms', {
             headers: {
               'Authorization': `Bearer ${sessionStorage.token}`,
             }
           })
             .then(response => (
-          this.coms = response.data
+              this.coms = response.data
             ))
         })
     },

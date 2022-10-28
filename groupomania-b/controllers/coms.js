@@ -115,7 +115,6 @@ exports.deleteCom = (req, res, next) => {
 
 //Modify One Comment
 exports.modifyCom = (req, res, next) => {
-  console.log(req.body)
   Com.findOne({ _id: req.params.id })
     .then((com) => {
       User.findOne({ _id: req.auth.userId })
