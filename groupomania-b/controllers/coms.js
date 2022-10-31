@@ -73,7 +73,7 @@ exports.deleteCom = (req, res, next) => {
           //If user logged is the creator of the post OR admin
           if (com.userId != null && com.userId.toString() === req.auth.userId || user.admin === true) {
             //if image exist    
-            if (com.imageUrl != '') {
+            if (com.imageUrl !== '' && com.image !== null) {
                   const path = com.imageUrl.split('http://localhost:3000/')
                   const fs = require('fs')
               //Delete image on backend folder
@@ -123,16 +123,17 @@ exports.modifyCom = (req, res, next) => {
 
             //Delete Old File on hard-disk
             if (req.file) {
-
+              if (com.imageUrl !== '' && com.image !== null) {
               const path = com.imageUrl.split('http://localhost:3000/')
               const fs = require('fs')
+
               fs.unlink(path[1], (err) => {
                 if (err) {
                   console.error(err)
                   return
                 }
               })
-
+            }
               //Update image
               Com.updateOne({ _id: req.params.id }, req.body ? { ...req.body, imageUrl: `${req.protocol}://${req.get('host')}/img/${req.file.filename}`, _id: req.params.id } : { imageUrl: `${req.protocol}://${req.get('host')}/img/${req.file.filename}`, _id: req.params.id })
                 .then(() => {
