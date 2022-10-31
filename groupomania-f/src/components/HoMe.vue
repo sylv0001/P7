@@ -140,7 +140,7 @@ export default {
           'Authorization': `Bearer ${sessionStorage.token}`,
         }
       })
-        .then((response) => {
+        .then(() => {
           axios.get('http://localhost:3000/api/coms', {
             headers: {
               'Authorization': `Bearer ${sessionStorage.token}`,
