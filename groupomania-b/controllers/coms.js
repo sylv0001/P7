@@ -73,7 +73,11 @@ exports.deleteCom = (req, res, next) => {
           //If user logged is the creator of the post OR admin
           if (com.userId != null && com.userId.toString() === req.auth.userId || user.admin === true) {
             //if image exist    
+<<<<<<< HEAD
             if (com.imageUrl != null && com.imageUrl !== '') {
+=======
+            if (com.imageUrl !== '' || com.image !== null) {
+>>>>>>> b073c0fcd7de195148ed74caeec7855060974c78
                   const path = com.imageUrl.split('http://localhost:3000/')
                   const fs = require('fs')
               //Delete image on backend folder
