@@ -73,13 +73,10 @@ exports.deleteCom = (req, res, next) => {
           //If user logged is the creator of the post OR admin
           if (com.userId != null && com.userId.toString() === req.auth.userId || user.admin === true) {
             //if image exist    
-<<<<<<< HEAD
             if (com.imageUrl != null && com.imageUrl !== '') {
-=======
-            if (com.imageUrl !== '' || com.image !== null) {
->>>>>>> b073c0fcd7de195148ed74caeec7855060974c78
-                  const path = com.imageUrl.split('http://localhost:3000/')
-                  const fs = require('fs')
+              // if (com.imageUrl !== '' || com.image !== null) {
+              const path = com.imageUrl.split('http://localhost:3000/')
+              const fs = require('fs')
               //Delete image on backend folder
               fs.unlink(path[1], () => {
                 Com.deleteOne({ _id: req.params.id })
@@ -88,10 +85,10 @@ exports.deleteCom = (req, res, next) => {
                   })
                   .catch((error) => {
                     res.status(400).json({ error: error });
-                    }
+                  }
                   );
-                  })
-                }
+              })
+            }
 
             //if image not exist
             else {
@@ -101,10 +98,10 @@ exports.deleteCom = (req, res, next) => {
                 })
                 .catch((error) => {
                   res.status(400).json({ error: error });
-                    }
-                );
-              }
                 }
+                );
+            }
+          }
 
           //if user is not the creator of comment or not admin
           else {
@@ -128,28 +125,28 @@ exports.modifyCom = (req, res, next) => {
             //Delete Old File on hard-disk
             if (req.file) {
               if (com.imageUrl !== '' && com.image !== null) {
-              const path = com.imageUrl.split('http://localhost:3000/')
-              const fs = require('fs')
+                const path = com.imageUrl.split('http://localhost:3000/')
+                const fs = require('fs')
 
-              fs.unlink(path[1], (err) => {
-                if (err) {
-                  console.error(err)
-                  return
-                }
-              })
-            }
+                fs.unlink(path[1], (err) => {
+                  if (err) {
+                    console.error(err)
+                    return
+                  }
+                })
+              }
               //Update image
               Com.updateOne({ _id: req.params.id }, req.body ? { ...req.body, imageUrl: `${req.protocol}://${req.get('host')}/img/${req.file.filename}`, _id: req.params.id } : { imageUrl: `${req.protocol}://${req.get('host')}/img/${req.file.filename}`, _id: req.params.id })
                 .then(() => {
                   Com.findOne({
                     _id: req.params.id
                   })
-                  .then((com) => {
-                    res.status(201).json({
-                      com
-                    });
-                  }
-                  )
+                    .then((com) => {
+                      res.status(201).json({
+                        com
+                      });
+                    }
+                    )
                 }
                 )
                 .catch((error) => {
@@ -250,13 +247,8 @@ exports.likeCom = (req, res, next) => {
               .catch((error) => res.status(400).json({ error }));
           }
         }
-        else {
-          return
-        }
       })
-
   }
-
 
   ////////////If user add "like" to dislike or delete his dislike////////////
   if (req.body.like === -1) {
@@ -279,9 +271,6 @@ exports.likeCom = (req, res, next) => {
               .then(() => res.status(200).json({ numDislikes }))
               .catch((error) => res.status(400).json({ error }));
           }
-        }
-        else {
-          return
         }
       })
   }

@@ -99,18 +99,13 @@ export default {
   methods: {
     //like to like or reset like
     like(id) {
-      //If the user is not in the usersLikes array -> + like
-      if (!this.userLik) { this.sendLike(id, { userId: sessionStorage.userId, like: 1 }, true) }
-      //If the user is in the usersLikes array -> reset like
-      else { this.sendLike(id, { userId: sessionStorage.userId, like: 0 }, true) }
+      this.sendLike(id, { userId: sessionStorage.userId, like: 1 }, true)
     },
     //Dislike to dislike or reset dislike
     dislike(id) {
-      //If the user is not in the usersDislikes array -> + dislike
-      if (!this.userDislik) { this.sendLike(id, { userId: sessionStorage.userId, like: -1 }, false) }
-      //If the user is in the usersDislikes array -> reset dislike
-      else { this.sendLike(id, { userId: sessionStorage.userId, like: 0 }, false) }
+      this.sendLike(id, { userId: sessionStorage.userId, like: -1 }, false)
     },
+
     //request to like, dislike or delete this one
     sendLike(id, object, isLike) {
       axios.post('http://localhost:3000/api/coms/' + id + '/like', object, {
@@ -118,7 +113,7 @@ export default {
           'Authorization': `Bearer ${sessionStorage.token}`,
         }
       })
-        //Update number of dislikes in real time
+        //Update number of like or dislikes in real time
         .then(response => {
           this.coms.forEach(com => {
             if (id === com._id) {
