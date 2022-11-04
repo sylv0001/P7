@@ -74,9 +74,9 @@ exports.deleteCom = (req, res, next) => {
           if (com.userId != null && com.userId.toString() === req.auth.userId || user.admin === true) {
             //if image exist    
             if (com.imageUrl != null && com.imageUrl !== '') {
-              // if (com.imageUrl !== '' || com.image !== null) {
               const path = com.imageUrl.split('http://localhost:3000/')
               const fs = require('fs')
+
               //Delete image on backend folder
               fs.unlink(path[1], () => {
                 Com.deleteOne({ _id: req.params.id })
@@ -112,7 +112,7 @@ exports.deleteCom = (req, res, next) => {
         }
         )
     })
-};
+}
 
 //Modify One Comment
 exports.modifyCom = (req, res, next) => {
@@ -247,6 +247,10 @@ exports.likeCom = (req, res, next) => {
               .catch((error) => res.status(400).json({ error }));
           }
         }
+        else {
+          const numLikes = com.likes;
+          res.status(200).json({ numLikes })
+        }
       })
   }
 
@@ -271,6 +275,10 @@ exports.likeCom = (req, res, next) => {
               .then(() => res.status(200).json({ numDislikes }))
               .catch((error) => res.status(400).json({ error }));
           }
+        }
+        else {
+          const numDislikes = com.dislikes;
+          res.status(200).json({ numDislikes })
         }
       })
   }

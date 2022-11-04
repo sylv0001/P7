@@ -119,7 +119,8 @@ export default {
             if (id === com._id) {
               if (isLike) {
                 { com.likes = response.data.numLikes }
-              } else {
+              } 
+              else {
                 com.dislikes = response.data.numDislikes
               }
             }
